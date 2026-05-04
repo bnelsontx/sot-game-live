@@ -7467,10 +7467,18 @@
       body.appendChild(soundSection);
       const dataSection = makeSection("Data Management");
       const btnRow = el("div", "settings-btn-row");
+      const statusEl = el("div", "settings-status");
+      function showStatus(text) {
+        statusEl.textContent = text;
+        statusEl.classList.remove("settings-status--visible");
+        void statusEl.offsetWidth;
+        statusEl.classList.add("settings-status--visible");
+      }
       const btnSave = el("button", "ctrl-btn");
       btnSave.textContent = "\u{1F4BE} Save";
       btnSave.addEventListener("click", () => {
         save();
+        showStatus("Game saved.");
         emitter.emit("logMessage", { text: "%SAVE-6-INFO: Game saved.", type: "success", category: "system" });
       });
       const btnLoad = el("button", "ctrl-btn");
@@ -7478,6 +7486,7 @@
       btnLoad.addEventListener("click", () => {
         if (load()) {
           if (rebuildCallback) rebuildCallback();
+          showStatus("Game loaded.");
           emitter.emit("logMessage", { text: "%SAVE-6-INFO: Game loaded.", type: "success", category: "system" });
         }
       });
@@ -7485,12 +7494,19 @@
       btnExport.textContent = "\u{1F4CB} Export";
       btnExport.addEventListener("click", () => {
         const str = exportSave();
-        navigator.clipboard?.writeText(str).then(
-          () => emitter.emit("logMessage", { text: "%SAVE-6-INFO: Save exported to clipboard.", type: "success", category: "system" }),
-          () => {
-            window.prompt("Copy this save string:", str);
-          }
-        );
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(str).then(
+            () => {
+              showStatus("Save exported to clipboard.");
+              emitter.emit("logMessage", { text: "%SAVE-6-INFO: Save exported to clipboard.", type: "success", category: "system" });
+            },
+            () => {
+              window.prompt("Copy this save string:", str);
+            }
+          );
+        } else {
+          window.prompt("Copy this save string:", str);
+        }
       });
       const btnImport = el("button", "ctrl-btn");
       btnImport.textContent = "\u{1F4E5} Import";
@@ -7498,11 +7514,13 @@
         const str = window.prompt("Paste save string:");
         if (str && importSave(str)) {
           if (rebuildCallback) rebuildCallback();
+          showStatus("Save imported.");
           emitter.emit("logMessage", { text: "%SAVE-6-INFO: Save imported.", type: "success", category: "system" });
         }
       });
       btnRow.append(btnSave, btnLoad, btnExport, btnImport);
       dataSection.appendChild(btnRow);
+      dataSection.appendChild(statusEl);
       const wipeBtn = el("button", "ctrl-btn ctrl-btn--danger");
       wipeBtn.textContent = "\u{1F5D1} Wipe All Progress";
       wipeBtn.addEventListener("click", () => {
@@ -10032,6 +10050,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     clickBtn.append(clickCursor, clickText);
     clickBtn.addEventListener("click", () => {
       addResource("cli_commands", 1);
+      render();
       playClick();
       if (gameState.statistics) gameState.statistics.totalClicks = (gameState.statistics.totalClicks || 0) + 1;
       emitter.emit("logMessage", {

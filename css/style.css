@@ -1178,6 +1178,20 @@ body.no-animations *::after {
   margin-bottom: 8px;
 }
 
+.settings-status {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--positive);
+  height: 18px;
+  opacity: 0;
+  transition: opacity 0.6s ease 2s;
+}
+
+.settings-status--visible {
+  opacity: 1;
+  transition: none;
+}
+
 .settings-credits {
   font-size: 13px;
   color: var(--text-secondary);
