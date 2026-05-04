@@ -7832,6 +7832,8 @@
     const result = purchase(id, qty);
     if (result.success) {
       playBuild();
+      render();
+      render2();
       card.classList.add("bld-card--built");
       card.addEventListener("animationend", () => card.classList.remove("bld-card--built"), { once: true });
       const bldDef = data.buildings.get(id);

@@ -1,7 +1,5 @@
 # Source of Truth or Consequences
 
-[Play LIVE Here!](https://bnelsontx.github.io/sot-game-live/)
-
 An idle game by [bnelsontx](https://github.com/bnelsontx). Inspired by the real pain (and joy) of network automation.
 
 > You have a laptop, a console cable, and 47 devices that were last documented in a spreadsheet that Kevin started in 2019. Kevin doesn't work here anymore.
@@ -11,8 +9,6 @@ An idle game by [bnelsontx](https://github.com/bnelsontx). Inspired by the real 
 ## How to Play
 
 Open `index.html` in a browser. That's it. No server required. No dependencies. No 47-character API token. No Change Advisory Board approval.
-
-You can play the live deployment at: [https://bnelsontx.github.io/sot-game-live/](https://bnelsontx.github.io/sot-game-live/)
 
 ## What Is This
 
