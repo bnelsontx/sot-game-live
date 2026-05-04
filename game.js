@@ -131,6 +131,11 @@
         gameState.unlocked.upgrades.add(id);
       }
     }
+    for (const [id, def] of data2.workers) {
+      if (def.unlockCondition === null) {
+        gameState.unlocked.workers.add(id);
+      }
+    }
     if (data2.crafting) {
       for (const [id, def] of data2.crafting) {
         if (def.unlockCondition === null) {
@@ -5265,6 +5270,8 @@
       }
     }
     if (changed) {
+      const budget = gameState.resources.budget;
+      if (budget) budget.amount = budget.cap;
       emitter.emit("seasonChanged", { activeSeasons: newIds });
     }
   }
@@ -5284,7 +5291,7 @@
     return cachedEventModifiers.get(eventId) || 1;
   }
   function getActiveSeasons() {
-    return cachedActiveSeasons;
+    return gameState.calendar.activeSeasons;
   }
 
   // js/engine/unlockManager.js
@@ -6557,6 +6564,11 @@
       quantity,
       newCount: gameState.buildings[buildingId].count,
       flavorText: def.flavorOnBuild
+    });
+    emitter.emit("logMessage", {
+      text: `Built ${def.name} (x${quantity}).`,
+      type: "success",
+      category: "building"
     });
     return { success: true, flavorText: def.flavorOnBuild };
   }

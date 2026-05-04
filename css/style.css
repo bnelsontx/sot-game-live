@@ -864,8 +864,13 @@ body.no-animations *::after {
 }
 
 .batch-btn--active {
-  background: var(--accent);
-  color: white;
+  background: rgba(0, 136, 204, 0.1);
+  color: var(--accent);
+  border-right-color: var(--accent);
+}
+
+.batch-btn--active:hover {
+  background: rgba(0, 136, 204, 0.18);
 }
 
 .bld-build-btn {
@@ -1453,6 +1458,14 @@ body.no-animations *::after {
 
   .game-title-sub {
     display: none;
+  }
+
+  .header-center {
+    position: static;
+    transform: none;
+    order: 2;
+    flex-basis: 100%;
+    text-align: center;
   }
 
   .header-right {
@@ -2170,9 +2183,13 @@ body.no-animations *::after {
 }
 
 .trade-bulk-btn--active {
-  background: var(--accent);
+  background: rgba(0, 136, 204, 0.1);
   border-color: var(--accent);
-  color: white;
+  color: var(--accent);
+}
+
+.trade-bulk-btn--active:hover {
+  background: rgba(0, 136, 204, 0.18);
 }
 
 .trade-execute-btn {
