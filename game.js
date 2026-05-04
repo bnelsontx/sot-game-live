@@ -5291,7 +5291,7 @@
     return cachedEventModifiers.get(eventId) || 1;
   }
   function getActiveSeasons() {
-    return gameState.calendar.activeSeasons;
+    return cachedActiveSeasons;
   }
 
   // js/engine/unlockManager.js
