@@ -10051,6 +10051,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     clickBtn.addEventListener("click", () => {
       addResource("cli_commands", 1);
       render();
+      renderActiveTab();
       playClick();
       if (gameState.statistics) gameState.statistics.totalClicks = (gameState.statistics.totalClicks || 0) + 1;
       emitter.emit("logMessage", {
