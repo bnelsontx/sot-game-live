@@ -807,6 +807,7 @@
       effects: [
         { type: "production", resourceId: "documentation_pages", amount: 0.3 },
         { type: "production", resourceId: "ip_addresses", amount: 0.1 },
+        { type: "production", resourceId: "subnet_allocations", amount: 0.1 },
         { type: "cap_increase", resourceId: "documentation_pages", amount: 50 },
         { type: "cap_increase", resourceId: "ip_addresses", amount: 40 }
       ],
@@ -917,6 +918,7 @@
       ],
       effects: [
         { type: "production", resourceId: "jinja_templates", amount: 0.3 },
+        { type: "production", resourceId: "yaml_files", amount: 0.2 },
         { type: "cap_increase", resourceId: "jinja_templates", amount: 25 },
         { type: "cap_increase", resourceId: "yaml_files", amount: 40 }
       ],
@@ -1002,6 +1004,7 @@
         { type: "production", resourceId: "api_tokens", amount: 0.5 },
         { type: "production", resourceId: "automation_jobs", amount: 0.3 },
         { type: "production", resourceId: "json_blobs", amount: 0.5 },
+        { type: "production", resourceId: "webhook_events", amount: 0.3 },
         { type: "cap_increase", resourceId: "cli_commands", amount: 500 },
         { type: "cap_increase", resourceId: "graphql_queries", amount: 30 },
         { type: "cap_increase", resourceId: "api_tokens", amount: 10 },
@@ -1025,9 +1028,11 @@
       effects: [
         { type: "production", resourceId: "ansible_playbooks", amount: 0.5 },
         { type: "production", resourceId: "automation_jobs", amount: 0.3 },
+        { type: "production", resourceId: "config_diffs", amount: 0.2 },
         { type: "cap_increase", resourceId: "yaml_files", amount: 60 },
         { type: "cap_increase", resourceId: "ssh_keys", amount: 20 },
-        { type: "cap_increase", resourceId: "ansible_playbooks", amount: 15 }
+        { type: "cap_increase", resourceId: "ansible_playbooks", amount: 15 },
+        { type: "cap_increase", resourceId: "golden_configs", amount: 30 }
       ],
       maxCount: null,
       unlockCondition: { type: "tech", techId: "configuration_management" },
@@ -1069,6 +1074,7 @@
       effects: [
         { type: "production", resourceId: "ip_addresses", amount: 0.8 },
         { type: "production", resourceId: "subnet_allocations", amount: 0.5 },
+        { type: "production", resourceId: "circuit_ids", amount: 0.3 },
         { type: "cap_increase", resourceId: "ip_addresses", amount: 50 },
         { type: "cap_increase", resourceId: "subnet_allocations", amount: 30 },
         { type: "cap_increase", resourceId: "circuit_ids", amount: 20 }
@@ -1155,7 +1161,8 @@
         { type: "production", resourceId: "golden_configs", amount: 0.2 },
         { type: "cap_increase", resourceId: "golden_configs", amount: 10 },
         { type: "cap_increase", resourceId: "config_diffs", amount: 30 },
-        { type: "cap_increase", resourceId: "compliance_reports", amount: 10 }
+        { type: "cap_increase", resourceId: "compliance_reports", amount: 10 },
+        { type: "cap_increase", resourceId: "design_documents", amount: 25 }
       ],
       maxCount: null,
       unlockCondition: { type: "tech", techId: "config_compliance" },
@@ -1220,10 +1227,11 @@
         { type: "production", resourceId: "change_window_tokens", amount: 0.3 },
         { type: "production", resourceId: "meeting_minutes", amount: 0.2 },
         { type: "cap_increase", resourceId: "change_window_tokens", amount: 2 },
-        { type: "cap_increase", resourceId: "meeting_minutes", amount: 30 }
+        { type: "cap_increase", resourceId: "meeting_minutes", amount: 30 },
+        { type: "cap_increase", resourceId: "design_documents", amount: 15 }
       ],
       maxCount: null,
-      unlockCondition: { type: "resource", resourceId: "change_window_tokens", amount: 20 },
+      unlockCondition: { type: "resource", resourceId: "change_window_tokens", amount: 4 },
       flavorOnBuild: "The CAB room is ready. Bring donuts.",
       upgrades: []
     },
@@ -1304,6 +1312,7 @@
       effects: [
         { type: "production", resourceId: "compliance_reports", amount: 1 },
         { type: "production", resourceId: "golden_configs", amount: 0.5 },
+        { type: "production", resourceId: "fully_documented_networks", amount: 0.05 },
         { type: "cap_increase", resourceId: "compliance_reports", amount: 10 },
         { type: "cap_increase", resourceId: "golden_configs", amount: 10 }
       ],
@@ -1319,7 +1328,7 @@
       era: "multi_site_empire",
       costs: [
         { resourceId: "cli_commands", baseAmount: 6e3, priceRatio: 1.16 },
-        { resourceId: "design_documents", baseAmount: 300, priceRatio: 1.16 },
+        { resourceId: "design_documents", baseAmount: 150, priceRatio: 1.16 },
         { resourceId: "test_results", baseAmount: 200, priceRatio: 1.16 }
       ],
       effects: [
@@ -1348,6 +1357,7 @@
         { type: "production", resourceId: "automation_jobs", amount: 2 },
         { type: "production", resourceId: "webhook_events", amount: 1 },
         { type: "production", resourceId: "intent_declarations", amount: 0.3 },
+        { type: "production", resourceId: "circuit_ids", amount: 0.5 },
         { type: "cap_increase", resourceId: "automation_jobs", amount: 75 },
         { type: "cap_increase", resourceId: "webhook_events", amount: 75 },
         { type: "cap_increase", resourceId: "intent_declarations", amount: 20 }
@@ -5042,6 +5052,36 @@
       ],
       craftTicks: 15,
       unlockCondition: { type: "tech", techId: "network_testing" }
+    },
+    {
+      id: "attend_a_meeting",
+      name: "Attend a Meeting",
+      description: "Could've been an email. Wasn't. You now have action items you'll forget by tomorrow and minutes nobody will read.",
+      inputs: [
+        { resourceId: "coffee", amount: 5 },
+        { resourceId: "documentation_pages", amount: 10 }
+      ],
+      outputs: [
+        { resourceId: "meeting_minutes", amount: 8 }
+      ],
+      craftTicks: 10,
+      unlockCondition: { type: "era", era: "scripting_and_hope" }
+    },
+    {
+      id: "complete_site_documentation",
+      name: "Complete Site Documentation",
+      description: "Every port documented. Every circuit labeled. Every rack elevation drawn. It's beautiful. It's also already out of date.",
+      inputs: [
+        { resourceId: "documentation_pages", amount: 100 },
+        { resourceId: "golden_configs", amount: 20 },
+        { resourceId: "design_documents", amount: 10 },
+        { resourceId: "compliance_reports", amount: 10 }
+      ],
+      outputs: [
+        { resourceId: "fully_documented_networks", amount: 1 }
+      ],
+      craftTicks: 50,
+      unlockCondition: { type: "era", era: "multi_site_empire" }
     }
   ];
 
@@ -8089,6 +8129,18 @@
   // js/ui/villagePanel.js
   var panelEl2;
   var lastUnlockedCount3 = 0;
+  function sortByLastFirst(a, b) {
+    const aParts = a.split(" ");
+    const bParts = b.split(" ");
+    const aLast = aParts.length > 1 ? aParts[aParts.length - 1] : a;
+    const bLast = bParts.length > 1 ? bParts[bParts.length - 1] : b;
+    if (aLast !== bLast) return aLast.localeCompare(bLast);
+    return aParts[0].localeCompare(bParts[0]);
+  }
+  function pluralizeRole(name, count) {
+    if (count === 1) return name;
+    return name + "s";
+  }
   function init13(containerEl) {
     panelEl2 = containerEl;
     rebuild3();
@@ -8246,29 +8298,40 @@
     }
     const censusList = panelEl2.querySelector(".census-list");
     if (censusList) {
+      let renderGroup = function(label, names) {
+        names.sort(sortByLastFirst);
+        const entry = el("div", "census-entry");
+        const strong = el("strong", "census-role-label");
+        strong.textContent = label + ":";
+        entry.appendChild(strong);
+        entry.appendChild(document.createTextNode(" " + names.join(", ")));
+        censusList.appendChild(entry);
+      };
       censusList.innerHTML = "";
       const censusHeader = panelEl2.querySelector(".census-header");
       if (censusHeader) censusHeader.textContent = `Census (${pop.total} engineers)`;
-      const assignmentMap = /* @__PURE__ */ new Map();
-      let assignedIdx = 0;
+      const roleNames = /* @__PURE__ */ new Map();
+      let nameIdx = 0;
       for (const [roleId, roleDef] of data.workers) {
         const count = gameState.workers[roleId]?.count || 0;
+        if (count === 0) continue;
+        const names = [];
         for (let i = 0; i < count; i++) {
-          assignmentMap.set(assignedIdx, roleDef.name);
-          assignedIdx++;
+          names.push(nameIdx < pop.names.length ? pop.names[nameIdx] : `Worker #${nameIdx + 1}`);
+          nameIdx++;
         }
+        roleNames.set(roleId, names);
       }
-      for (let i = 0; i < pop.names.length; i++) {
-        const entry = el("div", "census-entry");
-        const role = assignmentMap.get(i) || "Unassigned";
-        entry.textContent = `${pop.names[i]} \u2014 ${role}`;
-        censusList.appendChild(entry);
-      }
-      for (let i = pop.names.length; i < pop.total; i++) {
-        const entry = el("div", "census-entry");
-        const role = assignmentMap.get(i) || "Unassigned";
-        entry.textContent = `Worker #${i + 1} \u2014 ${role}`;
-        censusList.appendChild(entry);
+      const unassigned = [];
+      for (let i = nameIdx; i < pop.names.length; i++) unassigned.push(pop.names[i]);
+      for (let i = Math.max(nameIdx, pop.names.length); i < pop.total; i++) unassigned.push(`Worker #${i + 1}`);
+      if (unassigned.length > 0) renderGroup("Unassigned", unassigned);
+      const unlockedRoles = [...gameState.unlocked.workers].reverse();
+      for (const roleId of unlockedRoles) {
+        const names = roleNames.get(roleId);
+        if (!names) continue;
+        const roleDef = data.workers.get(roleId);
+        renderGroup(pluralizeRole(roleDef.name, names.length), names);
       }
     }
     setTabBadge("village", pop.free);

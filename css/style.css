@@ -1117,6 +1117,11 @@ body.no-animations *::after {
   font-size: 12px;
   color: var(--text-muted);
   padding: 2px 0;
+  margin-bottom: 6px;
+}
+
+.census-role-label {
+  color: var(--text);
 }
 
 /* Controls */
