@@ -1008,7 +1008,8 @@
         { type: "cap_increase", resourceId: "cli_commands", amount: 500 },
         { type: "cap_increase", resourceId: "graphql_queries", amount: 30 },
         { type: "cap_increase", resourceId: "api_tokens", amount: 10 },
-        { type: "cap_increase", resourceId: "json_blobs", amount: 20 }
+        { type: "cap_increase", resourceId: "json_blobs", amount: 20 },
+        { type: "cap_increase", resourceId: "nautobot_apps", amount: 15 }
       ],
       maxCount: null,
       unlockCondition: { type: "tech", techId: "source_of_truth" },
@@ -1054,7 +1055,8 @@
         { type: "production", resourceId: "test_results", amount: 0.5 },
         { type: "production", resourceId: "pull_requests", amount: 0.2 },
         { type: "cap_increase", resourceId: "git_commits", amount: 75 },
-        { type: "cap_increase", resourceId: "container_images", amount: 15 }
+        { type: "cap_increase", resourceId: "container_images", amount: 15 },
+        { type: "cap_increase", resourceId: "terraform_plans", amount: 20 }
       ],
       maxCount: null,
       unlockCondition: { type: "tech", techId: "continuous_integration" },
