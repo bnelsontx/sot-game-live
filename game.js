@@ -7260,6 +7260,57 @@
     requestAnimationFrame(() => backdrop.classList.add("modal-backdrop--visible"));
     return { close, backdrop, dialog };
   }
+  var _switchToTab = null;
+  function registerTabSwitcher(fn) {
+    _switchToTab = fn;
+  }
+  function highlightAndScroll(target) {
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.classList.remove("nav-highlight");
+    void target.offsetWidth;
+    target.classList.add("nav-highlight");
+    target.addEventListener("animationend", () => {
+      target.classList.remove("nav-highlight");
+    }, { once: true });
+  }
+  function navigateTo(type, id) {
+    if (!_switchToTab) return;
+    if (type === "resource") {
+      requestAnimationFrame(() => {
+        const target = document.querySelector(`.resource-sidebar .resource-row[data-id="${id}"]`);
+        if (!target) return;
+        const category = target.closest(".resource-category--collapsed");
+        if (category) {
+          category.classList.remove("resource-category--collapsed");
+          const chevron = category.querySelector(".category-chevron");
+          if (chevron) chevron.textContent = "\u25BE";
+        }
+        highlightAndScroll(target);
+      });
+      return;
+    }
+    const TAB_MAP = { building: "operations", worker: "village", upgrade: "workshop" };
+    const SELECTOR_MAP = {
+      building: `.building-card[data-id="${id}"]`,
+      worker: `.worker-role-row[data-role="${id}"]`,
+      upgrade: `.upgrade-card[data-id="${id}"]`
+    };
+    const tabId = TAB_MAP[type];
+    const selector = SELECTOR_MAP[type];
+    if (!tabId || !selector) return;
+    _switchToTab(tabId);
+    requestAnimationFrame(() => {
+      const target = document.querySelector(`.tab-panel[data-tab="${tabId}"] ${selector}`);
+      if (!target) return;
+      const group = target.closest(".era-group--collapsed");
+      if (group) {
+        group.classList.remove("era-group--collapsed");
+        const chevron = group.querySelector(".era-chevron");
+        if (chevron) chevron.textContent = "\u25BC";
+      }
+      highlightAndScroll(target);
+    });
+  }
 
   // js/ui/formatUtils.js
   var SEASON_NAMES = ["Q1", "Q2", "Q3", "Q4"];
@@ -7298,7 +7349,8 @@
     autoSaveInterval: 30,
     soundEnabled: false,
     soundVolume: 0.5,
-    logProductionTicks: false
+    logProductionTicks: false,
+    pinnedBuildings: []
   };
   var cache = null;
   function load2() {
@@ -7601,16 +7653,35 @@
   var collapsedCategories = /* @__PURE__ */ new Set();
   var sidebarEl;
   var lastUnlockedCount = 0;
-  var tooltipEl = null;
   var prevAmounts = /* @__PURE__ */ new Map();
+  var expandedRow = null;
+  var expandedDetail = null;
+  var expandedId = null;
+  var expandedDef = null;
+  var detailHeaderEl = null;
+  var detailBreakdownEl = null;
+  var breakdownDirty = true;
   function init10(containerEl) {
     sidebarEl = containerEl;
     rebuild();
     emitter.on("unlockChanged", ({ category }) => {
       if (category === "resources") rebuild();
     });
+    emitter.on("buildingPurchased", () => {
+      breakdownDirty = true;
+    });
+    emitter.on("workerAssigned", () => {
+      breakdownDirty = true;
+    });
+    emitter.on("workerArrived", () => {
+      breakdownDirty = true;
+    });
+    emitter.on("upgradePurchased", () => {
+      breakdownDirty = true;
+    });
   }
   function rebuild() {
+    collapseDetail();
     sidebarEl.innerHTML = "";
     lastUnlockedCount = gameState.unlocked.resources.size;
     const byCategory = /* @__PURE__ */ new Map();
@@ -7657,8 +7728,7 @@
         const value = el("span", "res-value");
         const rate = el("span", "res-rate");
         row.append(iconEl, name, value, rate);
-        row.addEventListener("mouseenter", () => showTooltip(id, def, row));
-        row.addEventListener("mouseleave", hideTooltip);
+        row.addEventListener("click", () => toggleDetail(id, def, row));
         items.appendChild(row);
       }
       group.append(header, items);
@@ -7701,19 +7771,28 @@
         valueEl.classList.remove("res-value--capped");
       }
     }
-  }
-  function showTooltip(id, def, anchorEl) {
-    hideTooltip();
-    tooltipEl = el("div", "resource-tooltip");
-    const desc = el("div", "tooltip-desc");
-    desc.textContent = def.description || "";
-    tooltipEl.appendChild(desc);
-    const res = gameState.resources[id];
-    if (res) {
-      const amountLine = el("div", "tooltip-amount");
-      amountLine.textContent = `${formatNum(res.amount)} / ${formatNum(res.cap)}`;
-      tooltipEl.appendChild(amountLine);
+    if (expandedDetail && expandedId) {
+      updateDetailHeader(expandedId, expandedDef);
+      if (breakdownDirty) {
+        breakdownDirty = false;
+        detailBreakdownEl.innerHTML = "";
+        detailBreakdownEl.appendChild(buildBreakdownContent(expandedId, expandedDef));
+        expandedDetail.style.maxHeight = expandedDetail.scrollHeight + "px";
+      }
     }
+  }
+  function updateDetailHeader(id, def) {
+    if (!detailHeaderEl) return;
+    const desc = detailHeaderEl.querySelector(".tooltip-desc");
+    if (desc) desc.textContent = def.description || "";
+    const amountEl = detailHeaderEl.querySelector(".tooltip-amount");
+    const res = gameState.resources[id];
+    if (amountEl && res) {
+      amountEl.textContent = `${formatNum(res.amount)} / ${formatNum(res.cap)}`;
+    }
+  }
+  function buildBreakdownContent(id, def) {
+    const frag = document.createDocumentFragment();
     const breakdown = el("div", "tooltip-breakdown");
     const breakdownTitle = el("div", "tooltip-breakdown-title");
     breakdownTitle.textContent = "Production";
@@ -7724,7 +7803,9 @@
       if (count === 0) continue;
       for (const effect of bDef.effects) {
         if (effect.type === "production" && effect.resourceId === id) {
-          const line = el("div", "tooltip-line");
+          const line = el("div", "tooltip-line tooltip-line--link");
+          line.dataset.navType = "building";
+          line.dataset.navId = bId;
           line.textContent = `${bDef.name} (x${count}): +${formatNum(effect.amount * count)}/tick`;
           breakdown.appendChild(line);
           hasBreakdown = true;
@@ -7736,7 +7817,9 @@
       if (count === 0) continue;
       for (const p of wDef.produces) {
         if (p.resourceId === id) {
-          const line = el("div", "tooltip-line");
+          const line = el("div", "tooltip-line tooltip-line--link");
+          line.dataset.navType = "worker";
+          line.dataset.navId = wId;
           line.textContent = `${wDef.name} (x${count}): +${formatNum(p.amount * count)}/tick`;
           breakdown.appendChild(line);
           hasBreakdown = true;
@@ -7744,7 +7827,9 @@
       }
       for (const c of wDef.consumes) {
         if (c.resourceId === id) {
-          const line = el("div", "tooltip-line tooltip-line--negative");
+          const line = el("div", "tooltip-line tooltip-line--negative tooltip-line--link");
+          line.dataset.navType = "worker";
+          line.dataset.navId = wId;
           line.textContent = `${wDef.name} (x${count}): -${formatNum(c.amount * count)}/tick`;
           breakdown.appendChild(line);
           hasBreakdown = true;
@@ -7757,7 +7842,7 @@
       totalLine.textContent = `Net: ${formatRate(netRate)}/s`;
       totalLine.className += netRate >= 0 ? "" : " tooltip-line--negative";
       breakdown.appendChild(totalLine);
-      tooltipEl.appendChild(breakdown);
+      frag.appendChild(breakdown);
     }
     const capSection = el("div", "tooltip-breakdown");
     const capTitle = el("div", "tooltip-breakdown-title");
@@ -7772,7 +7857,9 @@
       if (count === 0) continue;
       for (const effect of bDef.effects) {
         if (effect.type === "cap_increase" && effect.resourceId === id) {
-          const line = el("div", "tooltip-line");
+          const line = el("div", "tooltip-line tooltip-line--link");
+          line.dataset.navType = "building";
+          line.dataset.navId = bId;
           line.textContent = `${bDef.name} (x${count}): +${formatNum(effect.amount * count)}`;
           capSection.appendChild(line);
           hasCapBonus = true;
@@ -7783,14 +7870,16 @@
       if (!gameState.upgrades[uId]?.purchased) continue;
       for (const effect of uDef.effects) {
         if (effect.type === "cap_increase" && effect.target === id) {
-          const line = el("div", "tooltip-line");
+          const line = el("div", "tooltip-line tooltip-line--link");
+          line.dataset.navType = "upgrade";
+          line.dataset.navId = uId;
           line.textContent = `${uDef.name}: +${formatNum(effect.amount)}`;
           capSection.appendChild(line);
           hasCapBonus = true;
         }
       }
     }
-    if (hasCapBonus) tooltipEl.appendChild(capSection);
+    if (hasCapBonus) frag.appendChild(capSection);
     const upgradeSection = el("div", "tooltip-breakdown");
     const upgradeTitle = el("div", "tooltip-breakdown-title");
     upgradeTitle.textContent = "Bonuses";
@@ -7801,7 +7890,9 @@
       if (!gameState.upgrades[uId]?.purchased) continue;
       for (const effect of uDef.effects) {
         if (effect.type === "ratio" && effect.target === id) {
-          const line = el("div", "tooltip-line");
+          const line = el("div", "tooltip-line tooltip-line--link");
+          line.dataset.navType = "upgrade";
+          line.dataset.navId = uId;
           line.textContent = `${uDef.name}: +${Math.round(effect.amount * 100)}%`;
           upgradeSection.appendChild(line);
           totalBonus += effect.amount;
@@ -7813,26 +7904,57 @@
       const totalLine = el("div", "tooltip-line tooltip-line--total");
       totalLine.textContent = `Total bonus: +${Math.round(totalBonus * 100)}%`;
       upgradeSection.appendChild(totalLine);
-      tooltipEl.appendChild(upgradeSection);
+      frag.appendChild(upgradeSection);
     }
-    tooltipEl.style.position = "fixed";
-    const rect = anchorEl.getBoundingClientRect();
-    tooltipEl.style.left = `${rect.right + 8}px`;
-    tooltipEl.style.top = `${rect.top}px`;
-    document.body.appendChild(tooltipEl);
-    const tooltipRect = tooltipEl.getBoundingClientRect();
-    if (tooltipRect.right > window.innerWidth) {
-      tooltipEl.style.left = `${rect.left - tooltipRect.width - 8}px`;
-    }
-    if (tooltipRect.bottom > window.innerHeight) {
-      tooltipEl.style.top = `${window.innerHeight - tooltipRect.height - 8}px`;
-    }
+    return frag;
   }
-  function hideTooltip() {
-    if (tooltipEl) {
-      tooltipEl.remove();
-      tooltipEl = null;
+  function toggleDetail(id, def, row) {
+    if (expandedRow === row) {
+      collapseDetail();
+      return;
     }
+    collapseDetail();
+    expandedDetail = el("div", "resource-detail");
+    expandedDetail.addEventListener("click", (e) => {
+      const link = e.target.closest(".tooltip-line--link");
+      if (!link) return;
+      const { navType, navId } = link.dataset;
+      if (navType && navId) navigateTo(navType, navId);
+    });
+    detailHeaderEl = el("div", "resource-detail-header");
+    const desc = el("div", "tooltip-desc");
+    desc.textContent = def.description || "";
+    const amountLine = el("div", "tooltip-amount");
+    const res = gameState.resources[id];
+    if (res) amountLine.textContent = `${formatNum(res.amount)} / ${formatNum(res.cap)}`;
+    detailHeaderEl.append(desc, amountLine);
+    detailBreakdownEl = el("div", "resource-detail-breakdown");
+    detailBreakdownEl.appendChild(buildBreakdownContent(id, def));
+    breakdownDirty = false;
+    expandedDetail.append(detailHeaderEl, detailBreakdownEl);
+    row.after(expandedDetail);
+    row.classList.add("resource-row--expanded");
+    expandedRow = row;
+    expandedId = id;
+    expandedDef = def;
+    requestAnimationFrame(() => {
+      expandedDetail.classList.add("resource-detail--open");
+      expandedDetail.style.maxHeight = expandedDetail.scrollHeight + "px";
+    });
+  }
+  function collapseDetail() {
+    if (expandedDetail) {
+      expandedDetail.remove();
+      expandedDetail = null;
+    }
+    if (expandedRow) {
+      expandedRow.classList.remove("resource-row--expanded");
+      expandedRow = null;
+    }
+    expandedId = null;
+    expandedDef = null;
+    detailHeaderEl = null;
+    detailBreakdownEl = null;
   }
 
   // js/ui/buildingPanel.js
@@ -7858,9 +7980,28 @@
   var selectedQty = /* @__PURE__ */ new Map();
   var panelEl;
   var lastUnlockedCount2 = 0;
+  function getPinnedSet() {
+    return new Set(getSetting("pinnedBuildings") || []);
+  }
+  function togglePin(id) {
+    const pinned = getPinnedSet();
+    if (pinned.has(id)) {
+      pinned.delete(id);
+    } else {
+      pinned.add(id);
+    }
+    setSetting("pinnedBuildings", [...pinned]);
+    rebuild2();
+  }
   function init11(containerEl) {
     panelEl = containerEl;
     rebuild2();
+    panelEl.addEventListener("click", (e) => {
+      const link = e.target.closest(".resource-link");
+      if (!link) return;
+      const resId = link.dataset.resourceId;
+      if (resId) navigateTo("resource", resId);
+    });
     emitter.on("unlockChanged", ({ category }) => {
       if (category === "buildings") rebuild2();
     });
@@ -7886,9 +8027,135 @@
       }
     }
   }
+  function buildCard(id, def, isPinned) {
+    const card = el("div", "building-card");
+    card.dataset.id = id;
+    const cardHeader = el("div", "bld-header");
+    const nameSpan = el("span", "bld-name");
+    nameSpan.textContent = def.name;
+    const countBadge = el("span", "bld-count-badge");
+    const pinBtn = el("button", "bld-pin-btn");
+    pinBtn.textContent = isPinned ? "\u{1F4CC}" : "\u{1F4CD}";
+    pinBtn.title = isPinned ? "Unpin" : "Pin to top";
+    pinBtn.setAttribute("aria-label", isPinned ? `Unpin ${def.name}` : `Pin ${def.name} to top`);
+    if (isPinned) pinBtn.classList.add("bld-pin-btn--active");
+    pinBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      togglePin(id);
+    });
+    cardHeader.append(nameSpan, countBadge, pinBtn);
+    const descEl = el("div", "bld-desc");
+    descEl.textContent = def.description || "";
+    const effectsEl = el("div", "bld-effects");
+    for (const effect of def.effects) {
+      const resDef = data.resources.get(effect.resourceId);
+      const name = resDef ? resDef.name : effect.resourceId;
+      const tag = el("span", "bld-effect-tag");
+      if (effect.type === "production") {
+        tag.textContent = `+${effect.amount} ${name}`;
+        tag.classList.add("bld-effect-tag--positive", "resource-link");
+        tag.dataset.resourceId = effect.resourceId;
+      } else if (effect.type === "housing") {
+        tag.textContent = `\u{1F3E0} ${effect.amount}`;
+        tag.classList.add("bld-effect-tag--info");
+      } else if (effect.type === "consumption") {
+        tag.textContent = `-${effect.amount} ${name}`;
+        tag.classList.add("bld-effect-tag--negative", "resource-link");
+        tag.dataset.resourceId = effect.resourceId;
+      } else if (effect.type === "happiness_bonus") {
+        tag.textContent = `+${effect.amount}% happy`;
+        tag.classList.add("bld-effect-tag--info");
+      } else if (effect.type === "productivity_bonus") {
+        tag.textContent = `+${effect.amount}% prod`;
+        tag.classList.add("bld-effect-tag--info");
+      } else if (effect.type === "speed_bonus") {
+        tag.textContent = `+${effect.amount}% speed`;
+        tag.classList.add("bld-effect-tag--info");
+      } else if (effect.type === "cap_increase") {
+        tag.textContent = `+${effect.amount} ${name} cap`;
+        tag.classList.add("bld-effect-tag--info", "resource-link");
+        tag.dataset.resourceId = effect.resourceId;
+      } else {
+        continue;
+      }
+      effectsEl.appendChild(tag);
+    }
+    const costsEl = el("div", "bld-costs");
+    const controlsRow = el("div", "bld-controls");
+    const batchSelector = el("div", "batch-selector");
+    for (const qty of [1, 10, 25, 100]) {
+      const btn = el("button", "batch-btn");
+      btn.textContent = qty;
+      btn.dataset.qty = qty;
+      if (getQty(id) === qty) btn.classList.add("batch-btn--active");
+      btn.addEventListener("click", () => {
+        selectedQty.set(id, qty);
+        batchSelector.querySelectorAll(".batch-btn").forEach((b) => b.classList.remove("batch-btn--active"));
+        btn.classList.add("batch-btn--active");
+      });
+      batchSelector.appendChild(btn);
+    }
+    const maxBtn = el("button", "batch-btn");
+    maxBtn.textContent = "Max";
+    maxBtn.dataset.qty = "max";
+    if (getQty(id) === "max") maxBtn.classList.add("batch-btn--active");
+    maxBtn.addEventListener("click", () => {
+      selectedQty.set(id, "max");
+      batchSelector.querySelectorAll(".batch-btn").forEach((b) => b.classList.remove("batch-btn--active"));
+      maxBtn.classList.add("batch-btn--active");
+    });
+    batchSelector.appendChild(maxBtn);
+    const buildBtn = el("button", "bld-build-btn");
+    buildBtn.textContent = "Build";
+    buildBtn.addEventListener("click", () => {
+      const q = getQty(id);
+      const actual = q === "max" ? getMaxAffordable(id) : q;
+      buyBuilding(id, actual, card);
+    });
+    controlsRow.append(batchSelector, buildBtn);
+    card.append(cardHeader, descEl, effectsEl, costsEl, controlsRow);
+    return card;
+  }
+  function buildEraGroup(eraKey, eraLabel, buildings, pinned) {
+    const group = el("div", "era-group");
+    group.dataset.era = eraKey;
+    const header = el("div", "era-header");
+    const eraName = el("span", "era-name");
+    eraName.textContent = eraLabel;
+    const chevron = el("span", "era-chevron");
+    chevron.textContent = collapsedEras.has(eraKey) ? "\u25B8" : "\u25BE";
+    header.append(eraName, chevron);
+    if (collapsedEras.has(eraKey)) group.classList.add("era-group--collapsed");
+    header.addEventListener("click", () => {
+      if (collapsedEras.has(eraKey)) {
+        collapsedEras.delete(eraKey);
+        group.classList.remove("era-group--collapsed");
+        chevron.textContent = "\u25BE";
+      } else {
+        collapsedEras.add(eraKey);
+        group.classList.add("era-group--collapsed");
+        chevron.textContent = "\u25B8";
+      }
+    });
+    const items = el("div", "era-items");
+    for (const { id, def } of buildings) {
+      items.appendChild(buildCard(id, def, pinned.has(id)));
+    }
+    group.append(header, items);
+    return group;
+  }
   function rebuild2() {
     panelEl.innerHTML = "";
     lastUnlockedCount2 = gameState.unlocked.buildings.size;
+    const pinned = getPinnedSet();
+    let pruned = false;
+    for (const id of pinned) {
+      if (!gameState.unlocked.buildings.has(id)) {
+        pinned.delete(id);
+        pruned = true;
+      }
+    }
+    if (pruned) setSetting("pinnedBuildings", [...pinned]);
     const byEra = /* @__PURE__ */ new Map();
     for (const era of ERA_ORDER3) byEra.set(era, []);
     for (const id of gameState.unlocked.buildings) {
@@ -7898,109 +8165,16 @@
       if (!byEra.has(era)) byEra.set(era, []);
       byEra.get(era).push({ id, def });
     }
+    if (pinned.size > 0) {
+      const pinnedBuildings = [...pinned].map((id) => ({ id, def: data.buildings.get(id) })).filter((entry) => entry.def);
+      if (pinnedBuildings.length > 0) {
+        panelEl.appendChild(buildEraGroup("pinned", "Pinned", pinnedBuildings, pinned));
+      }
+    }
     for (const era of ERA_ORDER3) {
       const buildings = byEra.get(era);
       if (!buildings || buildings.length === 0) continue;
-      const group = el("div", "era-group");
-      group.dataset.era = era;
-      const header = el("div", "era-header");
-      const eraName = el("span", "era-name");
-      eraName.textContent = ERA_NAMES[era] || era;
-      const chevron = el("span", "era-chevron");
-      chevron.textContent = collapsedEras.has(era) ? "\u25B8" : "\u25BE";
-      header.append(eraName, chevron);
-      if (collapsedEras.has(era)) group.classList.add("era-group--collapsed");
-      header.addEventListener("click", () => {
-        if (collapsedEras.has(era)) {
-          collapsedEras.delete(era);
-          group.classList.remove("era-group--collapsed");
-          chevron.textContent = "\u25BE";
-        } else {
-          collapsedEras.add(era);
-          group.classList.add("era-group--collapsed");
-          chevron.textContent = "\u25B8";
-        }
-      });
-      const items = el("div", "era-items");
-      for (const { id, def } of buildings) {
-        const card = el("div", "building-card");
-        card.dataset.id = id;
-        const cardHeader = el("div", "bld-header");
-        const nameSpan = el("span", "bld-name");
-        nameSpan.textContent = def.name;
-        const countBadge = el("span", "bld-count-badge");
-        cardHeader.append(nameSpan, countBadge);
-        const descEl = el("div", "bld-desc");
-        descEl.textContent = def.description || "";
-        const effectsEl = el("div", "bld-effects");
-        for (const effect of def.effects) {
-          const resDef = data.resources.get(effect.resourceId);
-          const name = resDef ? resDef.name : effect.resourceId;
-          const tag = el("span", "bld-effect-tag");
-          if (effect.type === "production") {
-            tag.textContent = `+${effect.amount} ${name}`;
-            tag.classList.add("bld-effect-tag--positive");
-          } else if (effect.type === "housing") {
-            tag.textContent = `\u{1F3E0} ${effect.amount}`;
-            tag.classList.add("bld-effect-tag--info");
-          } else if (effect.type === "consumption") {
-            tag.textContent = `-${effect.amount} ${name}`;
-            tag.classList.add("bld-effect-tag--negative");
-          } else if (effect.type === "happiness_bonus") {
-            tag.textContent = `+${effect.amount}% happy`;
-            tag.classList.add("bld-effect-tag--info");
-          } else if (effect.type === "productivity_bonus") {
-            tag.textContent = `+${effect.amount}% prod`;
-            tag.classList.add("bld-effect-tag--info");
-          } else if (effect.type === "speed_bonus") {
-            tag.textContent = `+${effect.amount}% speed`;
-            tag.classList.add("bld-effect-tag--info");
-          } else if (effect.type === "cap_increase") {
-            tag.textContent = `+${effect.amount} ${name} cap`;
-            tag.classList.add("bld-effect-tag--info");
-          } else {
-            continue;
-          }
-          effectsEl.appendChild(tag);
-        }
-        const costsEl = el("div", "bld-costs");
-        const controlsRow = el("div", "bld-controls");
-        const batchSelector = el("div", "batch-selector");
-        for (const qty of [1, 10, 25, 100]) {
-          const btn = el("button", "batch-btn");
-          btn.textContent = qty;
-          btn.dataset.qty = qty;
-          if (getQty(id) === qty) btn.classList.add("batch-btn--active");
-          btn.addEventListener("click", () => {
-            selectedQty.set(id, qty);
-            batchSelector.querySelectorAll(".batch-btn").forEach((b) => b.classList.remove("batch-btn--active"));
-            btn.classList.add("batch-btn--active");
-          });
-          batchSelector.appendChild(btn);
-        }
-        const maxBtn = el("button", "batch-btn");
-        maxBtn.textContent = "Max";
-        maxBtn.dataset.qty = "max";
-        if (getQty(id) === "max") maxBtn.classList.add("batch-btn--active");
-        maxBtn.addEventListener("click", () => {
-          selectedQty.set(id, "max");
-          batchSelector.querySelectorAll(".batch-btn").forEach((b) => b.classList.remove("batch-btn--active"));
-          maxBtn.classList.add("batch-btn--active");
-        });
-        batchSelector.appendChild(maxBtn);
-        const buildBtn = el("button", "bld-build-btn");
-        buildBtn.textContent = "Build";
-        buildBtn.addEventListener("click", () => {
-          const q = getQty(id);
-          const actual = q === "max" ? getMaxAffordable(id) : q;
-          buyBuilding(id, actual, card);
-        });
-        controlsRow.append(batchSelector, buildBtn);
-        card.append(cardHeader, descEl, effectsEl, costsEl, controlsRow);
-        items.appendChild(card);
-      }
-      group.append(header, items);
-      panelEl.appendChild(group);
+      panelEl.appendChild(buildEraGroup(era, ERA_NAMES[era] || era, buildings, pinned));
     }
   }
   function render2() {
@@ -8023,20 +8197,29 @@
       const displayQty = q === "max" ? Math.max(getMaxAffordable(id), 1) : q;
       const costs = calculateCost(id, displayQty);
       const costsEl = card.querySelector(".bld-costs");
-      costsEl.innerHTML = "";
-      const costLabel = el("span", "bld-cost-label");
+      let costLabel = costsEl.querySelector(".bld-cost-label");
+      let costSpans = costsEl.querySelectorAll(".resource-link");
+      if (!costLabel || costSpans.length !== costs.length) {
+        costsEl.innerHTML = "";
+        costLabel = el("span", "bld-cost-label");
+        costsEl.appendChild(costLabel);
+        for (let i = 0; i < costs.length; i++) {
+          const span = el("span", "resource-link");
+          span.dataset.resourceId = costs[i].resourceId;
+          costsEl.appendChild(span);
+          if (i < costs.length - 1) costsEl.appendChild(document.createTextNode("  \xB7  "));
+        }
+        costSpans = costsEl.querySelectorAll(".resource-link");
+      }
       costLabel.textContent = q === "max" ? `Cost (max ${getMaxAffordable(id)}): ` : `Cost (x${displayQty}): `;
-      costsEl.appendChild(costLabel);
       for (let i = 0; i < costs.length; i++) {
         const c = costs[i];
         const resDef = data.resources.get(c.resourceId);
         const name = resDef ? resDef.name : c.resourceId;
         const res = gameState.resources[c.resourceId];
         const affordable2 = res && res.amount >= c.totalAmount;
-        const span = el("span", affordable2 ? "cost-affordable" : "cost-unaffordable");
-        span.textContent = `${formatNum(c.totalAmount)} ${name}`;
-        if (i < costs.length - 1) span.textContent += "  \xB7  ";
-        costsEl.appendChild(span);
+        costSpans[i].className = affordable2 ? "cost-affordable resource-link" : "cost-unaffordable resource-link";
+        costSpans[i].textContent = `${formatNum(c.totalAmount)} ${name}`;
       }
       const buildBtn = card.querySelector(".bld-build-btn");
       const actualQty = q === "max" ? getMaxAffordable(id) : q;
@@ -8146,6 +8329,12 @@
   function init13(containerEl) {
     panelEl2 = containerEl;
     rebuild3();
+    panelEl2.addEventListener("click", (e) => {
+      const link = e.target.closest(".resource-link");
+      if (!link) return;
+      const resId = link.dataset.resourceId;
+      if (resId) navigateTo("resource", resId);
+    });
     emitter.on("unlockChanged", ({ category }) => {
       if (category === "workers") rebuild3();
     });
@@ -8217,22 +8406,30 @@
       roleDesc.textContent = def.description || "";
       const footer = el("div", "worker-role-footer");
       const rates = el("div", "role-rates");
-      const produces = [];
-      for (const p of def.produces) {
-        const resDef = data.resources.get(p.resourceId);
-        produces.push(`+${p.amount} ${resDef ? resDef.name : p.resourceId}`);
-      }
-      const consumes = [];
-      for (const c of def.consumes) {
-        const resDef = data.resources.get(c.resourceId);
-        consumes.push(`-${c.amount} ${resDef ? resDef.name : c.resourceId}`);
-      }
       const rateProduces = el("span", "role-rate-positive");
-      rateProduces.textContent = produces.join(", ");
+      for (let i = 0; i < def.produces.length; i++) {
+        const p = def.produces[i];
+        const resDef = data.resources.get(p.resourceId);
+        const name = resDef ? resDef.name : p.resourceId;
+        const resSpan = el("span", "resource-link");
+        resSpan.dataset.resourceId = p.resourceId;
+        resSpan.textContent = `+${p.amount} ${name}`;
+        rateProduces.appendChild(resSpan);
+        if (i < def.produces.length - 1) rateProduces.appendChild(document.createTextNode(", "));
+      }
       const rateConsumes = el("span", "role-rate-negative");
-      rateConsumes.textContent = consumes.join(", ");
+      for (let i = 0; i < def.consumes.length; i++) {
+        const c = def.consumes[i];
+        const resDef = data.resources.get(c.resourceId);
+        const name = resDef ? resDef.name : c.resourceId;
+        const resSpan = el("span", "resource-link");
+        resSpan.dataset.resourceId = c.resourceId;
+        resSpan.textContent = `-${c.amount} ${name}`;
+        rateConsumes.appendChild(resSpan);
+        if (i < def.consumes.length - 1) rateConsumes.appendChild(document.createTextNode(", "));
+      }
       rates.append(rateProduces);
-      if (consumes.length > 0) {
+      if (def.consumes.length > 0) {
         rates.append(document.createTextNode(" | "), rateConsumes);
       }
       const controls = el("div", "role-controls");
@@ -8364,6 +8561,12 @@
   function init14(containerEl) {
     panelEl3 = containerEl;
     rebuild4();
+    panelEl3.addEventListener("click", (e) => {
+      const link = e.target.closest(".resource-link");
+      if (!link) return;
+      const resId = link.dataset.resourceId;
+      if (resId) navigateTo("resource", resId);
+    });
     emitter.on("unlockChanged", ({ category }) => {
       if (category === "technologies") rebuild4();
     });
@@ -8569,17 +8772,25 @@
       if (!def) continue;
       const costsEl = card.querySelector(".tech-costs");
       if (costsEl) {
-        costsEl.innerHTML = "";
+        let costSpans = costsEl.querySelectorAll(".resource-link");
+        if (costSpans.length !== def.costs.length) {
+          costsEl.innerHTML = "";
+          for (let i = 0; i < def.costs.length; i++) {
+            const span = el("span", "resource-link");
+            span.dataset.resourceId = def.costs[i].resourceId;
+            costsEl.appendChild(span);
+            if (i < def.costs.length - 1) costsEl.appendChild(document.createTextNode(", "));
+          }
+          costSpans = costsEl.querySelectorAll(".resource-link");
+        }
         for (let i = 0; i < def.costs.length; i++) {
           const cost = def.costs[i];
           const resDef = data.resources.get(cost.resourceId);
           const name = resDef ? resDef.name : cost.resourceId;
           const res = gameState.resources[cost.resourceId];
           const affordable = res && res.amount >= cost.amount;
-          const span = el("span", affordable ? "cost-affordable" : "cost-unaffordable");
-          span.textContent = `${formatNum(cost.amount)} ${name}`;
-          if (i < def.costs.length - 1) span.textContent += ", ";
-          costsEl.appendChild(span);
+          costSpans[i].className = affordable ? "cost-affordable resource-link" : "cost-unaffordable resource-link";
+          costSpans[i].textContent = `${formatNum(cost.amount)} ${name}`;
         }
       }
       const btn = card.querySelector(".tech-research-btn");
@@ -8657,6 +8868,12 @@
   function init15(containerEl) {
     panelEl4 = containerEl;
     rebuild5();
+    panelEl4.addEventListener("click", (e) => {
+      const link = e.target.closest(".resource-link");
+      if (!link) return;
+      const resId = link.dataset.resourceId;
+      if (resId) navigateTo("resource", resId);
+    });
     emitter.on("unlockChanged", ({ category }) => {
       if (category === "upgrades" || category === "crafting") rebuild5();
     });
@@ -8724,8 +8941,14 @@
         descEl.textContent = def.description;
         const costsEl = el("div", "upgrade-costs");
         const effectsEl = el("div", "upgrade-effects");
-        const effectTexts = def.effects.map((e) => getEffectDescription(e));
-        effectsEl.textContent = effectTexts.join(", ");
+        for (let i = 0; i < def.effects.length; i++) {
+          const e = def.effects[i];
+          const span = el("span", "resource-link");
+          span.dataset.resourceId = e.target;
+          span.textContent = getEffectDescription(e);
+          effectsEl.appendChild(span);
+          if (i < def.effects.length - 1) effectsEl.appendChild(document.createTextNode(", "));
+        }
         const buttons = el("div", "upgrade-buttons");
         const buyBtn = el("button", "upgrade-buy-btn");
         buyBtn.textContent = "Purchase";
@@ -8763,6 +8986,7 @@
       const items = el("div", "era-items");
       for (const { id, def } of purchased) {
         const card = el("div", "upgrade-card upgrade-card--purchased");
+        card.dataset.id = id;
         const cardHeader = el("div", "upgrade-header");
         const check = el("span", "upgrade-check");
         check.textContent = "\u2713";
@@ -8770,7 +8994,14 @@
         nameSpan.textContent = def.name;
         cardHeader.append(check, nameSpan);
         const effectsEl = el("div", "upgrade-effects");
-        effectsEl.textContent = def.effects.map((e) => getEffectDescription(e)).join(", ");
+        for (let i = 0; i < def.effects.length; i++) {
+          const e = def.effects[i];
+          const span = el("span", "resource-link");
+          span.dataset.resourceId = e.target;
+          span.textContent = getEffectDescription(e);
+          effectsEl.appendChild(span);
+          if (i < def.effects.length - 1) effectsEl.appendChild(document.createTextNode(", "));
+        }
         card.append(cardHeader, effectsEl);
         items.appendChild(card);
       }
@@ -8802,19 +9033,29 @@
       descEl.textContent = def.description;
       const ioEl = el("div", "recipe-io");
       const inputsEl = el("div", "recipe-inputs");
-      const inputParts = def.inputs.map((input) => {
+      for (let i = 0; i < def.inputs.length; i++) {
+        const input = def.inputs[i];
         const resDef = data.resources.get(input.resourceId);
-        return `${input.amount} ${resDef ? resDef.name : input.resourceId}`;
-      });
-      inputsEl.textContent = inputParts.join(", ");
+        const name = resDef ? resDef.name : input.resourceId;
+        const span = el("span", "resource-link");
+        span.dataset.resourceId = input.resourceId;
+        span.textContent = `${input.amount} ${name}`;
+        inputsEl.appendChild(span);
+        if (i < def.inputs.length - 1) inputsEl.appendChild(document.createTextNode(", "));
+      }
       const arrow = el("span", "recipe-arrow");
       arrow.textContent = "\u2192";
       const outputsEl = el("div", "recipe-outputs");
-      const outputParts = def.outputs.map((output) => {
+      for (let i = 0; i < def.outputs.length; i++) {
+        const output = def.outputs[i];
         const resDef = data.resources.get(output.resourceId);
-        return `${output.amount} ${resDef ? resDef.name : output.resourceId}`;
-      });
-      outputsEl.textContent = outputParts.join(", ");
+        const name = resDef ? resDef.name : output.resourceId;
+        const span = el("span", "resource-link");
+        span.dataset.resourceId = output.resourceId;
+        span.textContent = `${output.amount} ${name}`;
+        outputsEl.appendChild(span);
+        if (i < def.outputs.length - 1) outputsEl.appendChild(document.createTextNode(", "));
+      }
       ioEl.append(inputsEl, arrow, outputsEl);
       const timeEl = el("div", "recipe-time");
       if (def.craftTicks === 0) {
@@ -8872,17 +9113,25 @@
       if (!def) continue;
       const costsEl = card.querySelector(".upgrade-costs");
       if (costsEl) {
-        costsEl.innerHTML = "";
+        let costSpans = costsEl.querySelectorAll(".resource-link");
+        if (costSpans.length !== def.costs.length) {
+          costsEl.innerHTML = "";
+          for (let i = 0; i < def.costs.length; i++) {
+            const span = el("span", "resource-link");
+            span.dataset.resourceId = def.costs[i].resourceId;
+            costsEl.appendChild(span);
+            if (i < def.costs.length - 1) costsEl.appendChild(document.createTextNode(", "));
+          }
+          costSpans = costsEl.querySelectorAll(".resource-link");
+        }
         for (let i = 0; i < def.costs.length; i++) {
           const cost = def.costs[i];
           const resDef = data.resources.get(cost.resourceId);
           const name = resDef ? resDef.name : cost.resourceId;
           const res = gameState.resources[cost.resourceId];
           const affordable = res && res.amount >= cost.amount;
-          const span = el("span", affordable ? "cost-affordable" : "cost-unaffordable");
-          span.textContent = `${formatNum(cost.amount)} ${name}`;
-          if (i < def.costs.length - 1) span.textContent += ", ";
-          costsEl.appendChild(span);
+          costSpans[i].className = affordable ? "cost-affordable resource-link" : "cost-unaffordable resource-link";
+          costSpans[i].textContent = `${formatNum(cost.amount)} ${name}`;
         }
       }
       const btn = card.querySelector(".upgrade-buy-btn");
@@ -8896,17 +9145,25 @@
       if (!def) continue;
       const inputsEl = card.querySelector(".recipe-inputs");
       if (inputsEl) {
-        inputsEl.innerHTML = "";
+        let inputSpans = inputsEl.querySelectorAll(".resource-link");
+        if (inputSpans.length !== def.inputs.length) {
+          inputsEl.innerHTML = "";
+          for (let i = 0; i < def.inputs.length; i++) {
+            const span = el("span", "resource-link");
+            span.dataset.resourceId = def.inputs[i].resourceId;
+            inputsEl.appendChild(span);
+            if (i < def.inputs.length - 1) inputsEl.appendChild(document.createTextNode(", "));
+          }
+          inputSpans = inputsEl.querySelectorAll(".resource-link");
+        }
         for (let i = 0; i < def.inputs.length; i++) {
           const input = def.inputs[i];
           const resDef = data.resources.get(input.resourceId);
           const name = resDef ? resDef.name : input.resourceId;
           const res = gameState.resources[input.resourceId];
           const affordable = res && res.amount >= input.amount;
-          const span = el("span", affordable ? "cost-affordable" : "cost-unaffordable");
-          span.textContent = `${input.amount} ${name}`;
-          if (i < def.inputs.length - 1) span.textContent += ", ";
-          inputsEl.appendChild(span);
+          inputSpans[i].className = affordable ? "cost-affordable resource-link" : "cost-unaffordable resource-link";
+          inputSpans[i].textContent = `${input.amount} ${name}`;
         }
       }
       const progressOuter = card.querySelector(".recipe-progress-outer");
@@ -10184,6 +10441,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     const tabPanelsEl2 = el("div", "tab-panels");
     main.append(tabBarEl2, tabPanelsEl2);
     init12(tabBarEl2, tabPanelsEl2);
+    registerTabSwitcher(switchTo);
     registerTab("operations", "Operations Center", init11, { unlocked: true });
     const villageUnlocked = gameState.unlocked.workers.size > 0;
     registerTab("village", "The Village", init13, { unlocked: villageUnlocked });
@@ -10336,6 +10594,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     renderEventBanner();
     render();
     renderActiveTab();
+    setTabBadge("village", gameState.population.free);
     flush();
   }
   function setPauseCallback(cb) {
