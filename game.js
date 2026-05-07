@@ -1997,6 +1997,9 @@
         { resourceId: "yaml_files", amount: 20 }
       ],
       researchTicks: 70,
+      effects: [
+        { type: "cap_increase", resourceId: "python_scripts", amount: 300 }
+      ],
       unlocks: {
         buildings: ["template_workshop"],
         resources: ["jinja_templates"],
@@ -2039,6 +2042,9 @@
         { resourceId: "python_scripts", amount: 30 }
       ],
       researchTicks: 55,
+      effects: [
+        { type: "cap_increase", resourceId: "python_scripts", amount: 200 }
+      ],
       unlocks: {
         buildings: [],
         resources: [],
@@ -2214,6 +2220,9 @@
         { resourceId: "ssh_keys", amount: 30 }
       ],
       researchTicks: 85,
+      effects: [
+        { type: "cap_increase", resourceId: "python_scripts", amount: 500 }
+      ],
       unlocks: {
         buildings: ["nornir_runner"],
         resources: ["nornir_inventories"],
@@ -2346,6 +2355,9 @@
         { resourceId: "test_results", amount: 50 }
       ],
       researchTicks: 100,
+      effects: [
+        { type: "cap_increase", resourceId: "python_scripts", amount: 1e3 }
+      ],
       unlocks: {
         buildings: ["test_lab"],
         resources: [],
@@ -3130,6 +3142,19 @@
       ],
       effects: [{ type: "cap_increase", target: "goodwill", amount: 50 }],
       unlockCondition: { type: "era", era: "the_platform" },
+      purchased: false
+    },
+    {
+      id: "virtual_environments",
+      name: "Virtual Environments",
+      description: "Isolated Python environments. pip install works without breaking everything. Usually.",
+      category: "productivity",
+      costs: [
+        { resourceId: "cli_commands", amount: 500 },
+        { resourceId: "yaml_files", amount: 50 }
+      ],
+      effects: [{ type: "cap_increase", target: "python_scripts", amount: 500 }],
+      unlockCondition: { type: "tech", techId: "python_basics" },
       purchased: false
     }
   ];
@@ -5126,6 +5151,11 @@
           console.warn(`Technology "${id}" references unknown resource "${cost.resourceId}" in costs`);
         }
       }
+      for (const effect of tech.effects || []) {
+        if ((effect.type === "production" || effect.type === "cap_increase") && !d.resources.has(effect.resourceId)) {
+          console.warn(`Technology "${id}" references unknown resource "${effect.resourceId}" in effects`);
+        }
+      }
       if (tech.unlocks) {
         for (const bid of tech.unlocks.buildings || []) {
           if (!d.buildings.has(bid)) {
@@ -6528,6 +6558,15 @@
         if (effect.type === "cap_increase") {
           const res = gameState.resources[effect.resourceId];
           if (res) res.cap += effect.amount * count;
+        }
+      }
+    }
+    for (const [id, def] of data.technologies) {
+      if (!gameState.technologies[id]?.researched) continue;
+      for (const effect of def.effects || []) {
+        if (effect.type === "cap_increase") {
+          const res = gameState.resources[effect.resourceId];
+          if (res) res.cap += effect.amount;
         }
       }
     }
