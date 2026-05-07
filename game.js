@@ -808,6 +808,7 @@
         { type: "production", resourceId: "documentation_pages", amount: 0.3 },
         { type: "production", resourceId: "ip_addresses", amount: 0.1 },
         { type: "production", resourceId: "subnet_allocations", amount: 0.1 },
+        { type: "production", resourceId: "technical_debt", amount: 0.15 },
         { type: "cap_increase", resourceId: "documentation_pages", amount: 50 },
         { type: "cap_increase", resourceId: "ip_addresses", amount: 40 }
       ],
@@ -844,6 +845,7 @@
       ],
       effects: [
         { type: "production", resourceId: "cli_commands", amount: 0.2 },
+        { type: "production", resourceId: "technical_debt", amount: 0.05 },
         { type: "cap_increase", resourceId: "cli_commands", amount: 50 }
       ],
       maxCount: null,
@@ -919,6 +921,7 @@
       effects: [
         { type: "production", resourceId: "jinja_templates", amount: 0.3 },
         { type: "production", resourceId: "yaml_files", amount: 0.2 },
+        { type: "production", resourceId: "technical_debt", amount: 0.08 },
         { type: "cap_increase", resourceId: "jinja_templates", amount: 25 },
         { type: "cap_increase", resourceId: "yaml_files", amount: 40 }
       ],
@@ -939,6 +942,7 @@
       effects: [
         { type: "production", resourceId: "cli_commands", amount: 0.5 },
         { type: "production", resourceId: "ssh_keys", amount: 0.3 },
+        { type: "production", resourceId: "technical_debt", amount: 0.1 },
         { type: "cap_increase", resourceId: "cli_commands", amount: 150 },
         { type: "cap_increase", resourceId: "ssh_keys", amount: 15 }
       ],
@@ -5876,6 +5880,7 @@
       console.error("Failed to save:", err);
     }
   }
+  var pendingOfflineMs = 0;
   function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return false;
@@ -5886,32 +5891,34 @@
         return false;
       }
       applyState(saveObj.state);
-      recalculateRates();
-      const elapsedMs = Date.now() - saveObj.timestamp;
-      if (elapsedMs > 0) {
-        const elapsedTicks = Math.floor(elapsedMs / 200);
-        const cappedTicks = Math.min(elapsedTicks, 18e3);
-        const effectiveTicks = Math.floor(cappedTicks * 0.5);
-        if (effectiveTicks > 0) {
-          for (let i = 0; i < effectiveTicks; i++) {
-            tick6();
-            tick4();
-            tick5();
-          }
-          if (gameState.events?.timedEffects) {
-            gameState.events.timedEffects = gameState.events.timedEffects.filter(
-              (e) => e.expiresAtTick === Infinity || e.expiresAtTick > gameState.time.totalTicks
-            );
-          }
-          const minutes = Math.round(elapsedMs / 6e4);
-          console.log(`Offline for ~${minutes} min. Applied ${effectiveTicks} ticks at 50% rate.`);
-        }
-      }
+      pendingOfflineMs = Math.max(0, Date.now() - saveObj.timestamp);
       return true;
     } catch (err) {
       console.error("Failed to load save:", err);
       return false;
     }
+  }
+  function applyOfflineProgress() {
+    if (pendingOfflineMs <= 0) return;
+    recalculateRates();
+    const elapsedTicks = Math.floor(pendingOfflineMs / 200);
+    const cappedTicks = Math.min(elapsedTicks, 18e3);
+    const effectiveTicks = Math.floor(cappedTicks * 0.5);
+    if (effectiveTicks > 0) {
+      for (let i = 0; i < effectiveTicks; i++) {
+        tick6();
+        tick4();
+        tick5();
+      }
+      if (gameState.events?.timedEffects) {
+        gameState.events.timedEffects = gameState.events.timedEffects.filter(
+          (e) => e.expiresAtTick === Infinity || e.expiresAtTick > gameState.time.totalTicks
+        );
+      }
+      const minutes = Math.round(pendingOfflineMs / 6e4);
+      console.log(`Offline for ~${minutes} min. Applied ${effectiveTicks} ticks at 50% rate.`);
+    }
+    pendingOfflineMs = 0;
   }
   function exportSave() {
     gameState.meta.lastSaveTimestamp = Date.now();
@@ -6505,7 +6512,7 @@
     for (const [resourceId, bonus] of ratioBonus) {
       const baseRate = rates.get(resourceId);
       if (baseRate > 0) {
-        rates.set(resourceId, baseRate * (1 + bonus));
+        rates.set(resourceId, baseRate * Math.max(0, 1 + bonus));
       }
     }
     cachedRates = rates;
@@ -7777,7 +7784,6 @@
         breakdownDirty = false;
         detailBreakdownEl.innerHTML = "";
         detailBreakdownEl.appendChild(buildBreakdownContent(expandedId, expandedDef));
-        expandedDetail.style.maxHeight = expandedDetail.scrollHeight + "px";
       }
     }
   }
@@ -7803,10 +7809,12 @@
       if (count === 0) continue;
       for (const effect of bDef.effects) {
         if (effect.type === "production" && effect.resourceId === id) {
-          const line = el("div", "tooltip-line tooltip-line--link");
+          const val = effect.amount * count;
+          const line = el("div", `tooltip-line tooltip-line--link${val < 0 ? " tooltip-line--negative" : ""}`);
           line.dataset.navType = "building";
           line.dataset.navId = bId;
-          line.textContent = `${bDef.name} (x${count}): +${formatNum(effect.amount * count)}/tick`;
+          const sign = val >= 0 ? "+" : "";
+          line.textContent = `${bDef.name} (x${count}): ${sign}${formatNum(val)}/tick`;
           breakdown.appendChild(line);
           hasBreakdown = true;
         }
@@ -7817,10 +7825,12 @@
       if (count === 0) continue;
       for (const p of wDef.produces) {
         if (p.resourceId === id) {
-          const line = el("div", "tooltip-line tooltip-line--link");
+          const val = p.amount * count;
+          const line = el("div", `tooltip-line tooltip-line--link${val < 0 ? " tooltip-line--negative" : ""}`);
           line.dataset.navType = "worker";
           line.dataset.navId = wId;
-          line.textContent = `${wDef.name} (x${count}): +${formatNum(p.amount * count)}/tick`;
+          const sign = val >= 0 ? "+" : "";
+          line.textContent = `${wDef.name} (x${count}): ${sign}${formatNum(val)}/tick`;
           breakdown.appendChild(line);
           hasBreakdown = true;
         }
@@ -7839,7 +7849,7 @@
     if (hasBreakdown) {
       const netRate = getPerSecondRate(id);
       const totalLine = el("div", "tooltip-line tooltip-line--total");
-      totalLine.textContent = `Net: ${formatRate(netRate)}/s`;
+      totalLine.textContent = `Net: ${formatRate(netRate)}`;
       totalLine.className += netRate >= 0 ? "" : " tooltip-line--negative";
       breakdown.appendChild(totalLine);
       frag.appendChild(breakdown);
@@ -7940,6 +7950,13 @@
     requestAnimationFrame(() => {
       expandedDetail.classList.add("resource-detail--open");
       expandedDetail.style.maxHeight = expandedDetail.scrollHeight + "px";
+      const detail = expandedDetail;
+      detail.addEventListener("transitionend", function onEnd(e) {
+        if (e.propertyName === "max-height") {
+          detail.removeEventListener("transitionend", onEnd);
+          detail.style.maxHeight = "none";
+        }
+      });
     });
   }
   function collapseDetail() {
@@ -10724,6 +10741,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
           init5();
           init4();
           recalculateRates();
+          applyOfflineProgress();
           init2();
         }
         await sleep(120 + Math.random() * 180);
