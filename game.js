@@ -10467,12 +10467,11 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     const counts = getAchievementCount();
     achievementCounterEl.textContent = `\u{1F3C6} ${counts.unlocked}/${counts.total - counts.hiddenRemaining}`;
     const toolbar = el("div", "header-toolbar");
-    const btnSave = el("button", "toolbar-btn");
-    btnSave.title = "Save";
-    btnSave.textContent = "\u{1F4BE}";
-    btnSave.addEventListener("click", () => {
-      save();
-      emitter.emit("logMessage", { text: "%SAVE-6-INFO: Game saved.", type: "success", category: "system" });
+    const btnGuide = el("button", "toolbar-btn");
+    btnGuide.title = "User Guide";
+    btnGuide.textContent = "\u{1F4D8}";
+    btnGuide.addEventListener("click", () => {
+      window.open("user-guide.html", "_blank");
     });
     const btnSettings = el("button", "toolbar-btn");
     btnSettings.title = "Settings";
@@ -10485,7 +10484,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     pauseBtn.addEventListener("click", () => {
       if (pauseCallback) pauseCallback();
     });
-    toolbar.append(btnSave, btnSettings, pauseBtn);
+    toolbar.append(btnGuide, btnSettings, pauseBtn);
     headerRight.append(headerTimeCol, achievementCounterEl, toolbar);
     header.append(titleEl, headerCenter, headerRight);
     container.appendChild(header);

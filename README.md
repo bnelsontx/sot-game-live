@@ -12,7 +12,7 @@ An idle game by [bnelsontx](https://github.com/bnelsontx). Inspired by the real 
 
 Open `index.html` in a browser. That's it. No server required. No dependencies. No 47-character API token. No Change Advisory Board approval.
 
-You can play the live deployment at: [https://bnelsontx.github.io/sot-game-live/](https://bnelsontx.github.io/sot-game-live/)
+You can play the live game at: [https://bnelsontx.github.io/sot-game-live/](https://bnelsontx.github.io/sot-game-live/)
 
 ## What Is This
 

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Guide — Source of Truth or Consequences</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #1a1d23;
+      color: #e0e0e0;
+      font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .guide {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    h1 {
+      font-size: 2em;
+      font-weight: 700;
+      color: #e0e0e0;
+      margin: 0 0 8px;
+      border-bottom: 2px solid #0088cc;
+      padding-bottom: 12px;
+    }
+    h2 {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #2dd4bf;
+      margin: 48px 0 16px;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 8px;
+    }
+    h3 {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #e0e0e0;
+      margin: 32px 0 12px;
+    }
+    p { margin: 0 0 16px; }
+    strong { color: #e0e0e0; font-weight: 600; }
+    em { font-style: italic; color: #8892b0; }
+    a { color: #0088cc; text-decoration: none; }
+    a:hover { text-decoration: underline; color: #0099e6; }
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      background: #2c3038;
+      color: #2dd4bf;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #242830;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 0 0 16px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 0.85em;
+      line-height: 1.6;
+      color: #22c55e;
+    }
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
+    ul, ol { margin: 0 0 16px; padding-left: 24px; }
+    li { margin-bottom: 8px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 24px;
+    }
+    th {
+      background: #2c3038;
+      color: #2dd4bf;
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid #30363d;
+      font-size: 0.9em;
+    }
+    td {
+      padding: 10px 12px;
+      border: 1px solid #30363d;
+      color: #e0e0e0;
+    }
+    tr:nth-child(even) td { background: rgba(36, 40, 48, 0.5); }
+    hr {
+      border: none;
+      border-top: 1px solid #30363d;
+      margin: 40px 0;
+    }
+    .faq-q {
+      color: #2dd4bf;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .faq-a { margin-bottom: 24px; }
+    nav.toc {
+      background: #242830;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0 32px;
+    }
+    nav.toc p {
+      color: #8892b0;
+      font-size: 0.85em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+    nav.toc ol {
+      margin: 0;
+      padding-left: 20px;
+      columns: 2;
+      column-gap: 24px;
+    }
+    nav.toc li {
+      margin-bottom: 6px;
+      font-size: 0.95em;
+      break-inside: avoid;
+    }
+    .back-to-top {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.85em;
+      color: #8892b0;
+    }
+    .back-to-top:hover { color: #0088cc; }
+    @media (max-width: 600px) {
+      .guide { padding: 24px 16px 48px; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.25em; margin-top: 36px; }
+      h3 { font-size: 1.1em; }
+      nav.toc ol { columns: 1; }
+      table { font-size: 0.85em; }
+      th, td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+<article class="guide" id="top">
+
+<h1>Source of Truth or Consequences &mdash; User Guide</h1>
+
+<pre><code>%DOC-5-LOADED: User guide initialized. Reading documentation before playing?
+               We're already proud of you. That puts you ahead of 90% of the industry.</code></pre>
+
+<p>Welcome to <em>Source of Truth or Consequences</em>, an idle game about the long, caffeinated journey from typing <code>show run</code> into a dusty console port to commanding a fully automated, self-healing multi-site network empire.</p>
+
+<p>Every step in between is painfully, hilariously real.</p>
+
+<p>This guide was last updated within the current calendar year, which already makes it more reliable than most network documentation you've encountered professionally.</p>
+
+<p><strong>What this guide is:</strong></p>
+<ul>
+  <li>A navigation aid for all game mechanics, from your first click to your fifth prestige reset</li>
+  <li>A strategic primer that won't insult your intelligence</li>
+  <li>Hopefully, a good time</li>
+</ul>
+
+<p><strong>What this guide is not:</strong></p>
+<ul>
+  <li>A spoiler guide with exact numbers, unlock chains, or item databases</li>
+  <li>A replacement for discovering things yourself</li>
+</ul>
+
+<p>We've intentionally left out specifics about items, tech trees, and event outcomes. Half the fun is the surprise. The other half is the recognition.</p>
+
+<nav class="toc">
+  <p>Contents</p>
+  <ol>
+    <li><a href="#quick-start">Quick Start &mdash; The First 10 Minutes</a></li>
+    <li><a href="#eras">The Six Eras</a></li>
+    <li><a href="#core-mechanics">Core Mechanics</a></li>
+    <li><a href="#meta-resources">Meta Resources &mdash; The Hidden Levers</a></li>
+    <li><a href="#trading-post">The Trading Post</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#seasons">Seasonal Cycles</a></li>
+    <li><a href="#prestige">The Forklift Upgrade &mdash; Prestige</a></li>
+    <li><a href="#philosophies">Automation Philosophies</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#ui-guide">UI Navigation Guide</a></li>
+    <li><a href="#saving">Saving, Loading, and Offline Play</a></li>
+    <li><a href="#strategy">Strategy Tips</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+    <li><a href="#glossary">Glossary</a></li>
+    <li><a href="#one-more-thing">One More Thing</a></li>
+  </ol>
+</nav>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="quick-start">Quick Start &mdash; The First 10 Minutes</h2>
+
+<p>For the engineer who skips README files and figures things out in production. We respect that. Here's the minimum viable knowledge:</p>
+
+<ol>
+  <li><strong>Click the button.</strong> The <code>&gt; show version</code> button in the header generates CLI Commands. This is your foundational resource. Click it like you're verifying reachability to every switch in the building before a maintenance window.</li>
+  <li><strong>Buy your first building.</strong> Open the <strong>Operations Center</strong> tab (it's already selected). Buildings produce resources every tick &mdash; one tick is two real seconds. Your first buildings are cheap. Savor that while it lasts.</li>
+  <li><strong>Watch the sidebar.</strong> The left panel shows all your resources. Numbers in green mean production is positive. Numbers in red mean something is being consumed faster than it's produced. Gold means you've hit the cap and production is being wasted. All three of these states will become intimately familiar.</li>
+  <li><strong>Read the log.</strong> The syslog-style terminal at the bottom of the screen tells you everything happening in your network. It uses real facility codes because this game has opinions about authenticity.</li>
+  <li><strong>Research when the tab appears.</strong> When the <strong>Research Lab</strong> tab unlocks, start researching technologies. They unlock new buildings, resources, workers, and entire categories of gameplay. The tech tree is deep. You'll be in it for a while.</li>
+  <li><strong>Do not let Coffee run out.</strong> We cannot stress this enough. Every engineer you hire consumes Coffee every tick. When Coffee hits zero, happiness craters, production collapses, and your game log fills with complaints that will feel uncomfortably familiar.</li>
+  <li><strong>Pay attention to meta resources.</strong> Sanity, Technical Debt, Change Window Tokens, Budget &mdash; these are the real constraints. They're covered in detail below, but the short version is: keep Sanity above 50, keep Technical Debt below 100, and never forget that Change Windows are finite.</li>
+  <li><strong>New tabs appear as you progress.</strong> When a new tab shows up with a glow effect, that's the game telling you a new mechanic has unlocked. Don't ignore it.</li>
+</ol>
+
+<p>If you've read this far, you have more patience than the median network engineer. The rest of the guide rewards that patience. If you haven't read this far because you already alt-tabbed back to the game &mdash; fair enough, we'll be here when you come back.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="eras">The Six Eras</h2>
+
+<p>The game progresses through six eras, each representing a real phase of network engineering maturity that the industry has collectively lived through, complained about, and written blog posts about.</p>
+
+<table>
+  <thead>
+    <tr><th>Era</th><th>Name</th><th>Theme</th><th>Approximate Time</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>I</td><td>The Terminal</td><td>Console cables and CLI</td><td>Start &mdash; ~1 hour</td></tr>
+    <tr><td>II</td><td>Scripting &amp; Hope</td><td>Python, Git, templates</td><td>~1&ndash;5 hours</td></tr>
+    <tr><td>III</td><td>The Platform</td><td>The source of truth arrives</td><td>~5 hours &mdash; 1 day</td></tr>
+    <tr><td>IV</td><td>Full NetDevOps</td><td>CI/CD, compliance, testing</td><td>~1&ndash;4 days</td></tr>
+    <tr><td>V</td><td>Multi-Site Empire</td><td>HA, ZTP, multi-site orchestration</td><td>~1&ndash;2 weeks</td></tr>
+    <tr><td>VI</td><td>The Cloud</td><td>Hybrid cloud, AIOps, intent-based</td><td>~3&ndash;6 weeks</td></tr>
+  </tbody>
+</table>
+
+<h3>Era I &mdash; The Terminal</h3>
+<p>It's you, a laptop, and a bag of console cables. Everything is manual. Every configuration change is typed by hand. Every verification is a <code>show</code> command and a prayer. The gameplay here is active &mdash; clicking, building, and watching numbers climb from single digits. Enjoy the simplicity. You'll miss it later.</p>
+
+<h3>Era II &mdash; Scripting &amp; Hope</h3>
+<p>Someone &mdash; probably you &mdash; had the audacity to write a Python script. Now everything is possible in theory and broken in practice. Version control enters the picture, templates start replacing copy-paste, and you begin to understand why people have opinions about YAML indentation. The game shifts from pure clicking to a mix of active play and idle production.</p>
+
+<h3>Era III &mdash; The Platform</h3>
+<p>This is the inflection point. A real platform enters the picture, and the era of spreadsheet-based network management comes to an end. Production ramps significantly, new resource categories open up, and the game starts rewarding strategic thinking over raw clicking speed. Era III is where you stop managing cables and start managing complexity.</p>
+
+<h3>Era IV &mdash; Full NetDevOps</h3>
+<p>You now have a CI/CD pipeline, a testing framework, compliance engines, and enough automation to make the Change Advisory Board nervous. The game becomes deeply strategic &mdash; resource bottlenecks require actual planning, Technical Debt becomes a real threat, and your engineers start having opinions about GitOps vs. ClickOps that they will not keep to themselves.</p>
+
+<h3>Era V &mdash; Multi-Site Empire</h3>
+<p>Multiple sites. Multiple time zones. One on-call rotation. This is primarily idle territory &mdash; check in a few times a day, make strategic decisions, and let your automation empire run. The resource counts are large, the buildings are expensive, and the complexity would be overwhelming if you hadn't spent the last four eras building the tooling to manage it.</p>
+
+<h3>Era VI &mdash; The Cloud</h3>
+<p>The final frontier. Hybrid cloud, AI-driven operations, intent-based networking. The network starts managing itself, and your role shifts from operator to architect to philosopher. You built a career. The career is now a machine. The machine is filing its own change requests.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="core-mechanics">Core Mechanics</h2>
+
+<h3>Clicking</h3>
+<p>The <code>&gt; show version</code> button in the header generates CLI Commands, your foundational resource. In the early game, every click matters &mdash; you're the only source of production. As you build infrastructure, buildings will eventually outpace your clicking, but those first few hundred clicks are the difference between a running network and an expensive paperweight.</p>
+
+<p>Clicking scales with certain upgrades and prestige bonuses. Even in the late game, there are reasons to click. Whether those reasons are strategic or purely nostalgic is between you and your mouse.</p>
+
+<h3>Resources</h3>
+<p>There are <strong>43 resources</strong> across five categories:</p>
+<ul>
+  <li><strong>Basic</strong> &mdash; The fundamental building blocks. Available from the start. Things you'd find in any network closet.</li>
+  <li><strong>Intermediate</strong> &mdash; Scripting and automation outputs appear as you enter Era II and III.</li>
+  <li><strong>Advanced</strong> &mdash; Platform and pipeline artifacts. The output of real engineering processes.</li>
+  <li><strong>Rare</strong> &mdash; The good stuff. Late-game resources that represent mature, automated operations.</li>
+  <li><strong>Meta</strong> &mdash; The hidden levers. Resources that constrain and modify every other system. These get their own section below because they deserve it.</li>
+</ul>
+
+<p>Resources appear in the left sidebar as they're unlocked, organized by category. Each row shows the current amount and the per-second production rate, color-coded: green for positive, red for negative, gold/amber for capped.</p>
+
+<p><strong>Resource caps</strong> are important. Every resource has a maximum storage amount. When you hit the cap, production is wasted &mdash; those resources are generated and immediately lost. This creates spending pressure: you need to invest resources in buildings, research, and upgrades before they overflow. Resource caps are the game's way of telling you that hoarding is not a strategy.</p>
+
+<p>Click any resource in the sidebar to see a detailed breakdown of what's producing it, what's consuming it, and where it's going.</p>
+
+<h3>Buildings</h3>
+<p>Buildings are the backbone of your production. They generate resources every tick, they cost resources to build, and each additional copy costs more than the last. This exponential pricing curve is a gentle reminder that scaling infrastructure never gets cheaper &mdash; it just finds new ways to be expensive.</p>
+
+<p>There are <strong>42 buildings</strong> across the six eras, plus a handful of support buildings for housing, morale, and caffeine infrastructure. Buildings are purchased in the <strong>Operations Center</strong> tab, organized by era in collapsible sections.</p>
+
+<p>Each building card shows:</p>
+<ul>
+  <li>What it produces (and what it might consume as a tradeoff)</li>
+  <li>The cost of the next copy, color-coded green if you can afford it</li>
+  <li>A batch selector for buying 1, 5, 10, or the maximum you can afford</li>
+  <li>A description that is usually informative and frequently judgmental</li>
+</ul>
+
+<p>Some buildings produce negative resources &mdash; Technical Debt, for instance &mdash; as a cost of doing business. Read the effect tags carefully before committing resources. Not every building is a net positive, but sometimes the tradeoff is worth it. Sometimes it isn't, and you'll discover that the hard way, just like in production.</p>
+
+<p>Locked buildings appear grayed out with a hint about their unlock condition. If you can see it but can't buy it, you're probably missing a technology or a resource threshold.</p>
+
+<h3>Workers &mdash; The Village</h3>
+<p>Workers are your engineers. They produce resources passively, have special synergies with certain buildings, and consume Coffee at a rate that would concern a medical professional.</p>
+
+<p>There are <strong>12 types of engineers</strong> spanning the six eras, from entry-level technicians who pull cables to data scientists who talk to your network in natural language. Each type has a unique production profile and unlocks at different points in the game.</p>
+
+<p>Workers are managed in the <strong>Village</strong> tab. Key details:</p>
+<ul>
+  <li><strong>Hiring costs Budget.</strong> Each subsequent hire of the same type costs more, because that's how the job market works.</li>
+  <li><strong>Housing is required.</strong> Engineers need somewhere to work. Support buildings provide housing capacity. If you're out of housing, you can't hire. Build the cubicles before you need them, not after.</li>
+  <li><strong>Every engineer consumes Coffee every tick.</strong> All of them. Always. This is the most realistic mechanic in the game.</li>
+  <li><strong>Happiness</strong> is a production multiplier ranging from 0% to 100%. At 100%, your engineers produce at full capacity. At 0%, they produce nothing and start looking at LinkedIn. Many factors influence happiness &mdash; coffee supply, working conditions, meeting load, incident frequency, Technical Debt levels, and whether anyone remembered to document the last change.</li>
+</ul>
+
+<p>When happiness drops, your engineers complain in the game log. These complaints are technically cosmetic, but spiritually devastating. They know exactly which of your decisions led to this point, and they are not subtle about it.</p>
+
+<h3>Research &mdash; The Tech Tree</h3>
+<p>Technologies are researched in the <strong>Research Lab</strong> tab by spending resources over time. There are <strong>44 technologies</strong> forming a dependency tree &mdash; some have prerequisites, some have prerequisites that have prerequisites. It makes sense eventually, the way any technology organization's architecture diagram makes sense eventually.</p>
+
+<p>Key details:</p>
+<ul>
+  <li>Only one technology can be actively researched at a time, unless modified by prestige bonuses or specific upgrades</li>
+  <li>Research costs resources upfront and takes time (measured in ticks)</li>
+  <li>Completing a technology may unlock new buildings, resources, workers, or mechanics</li>
+  <li>Some workers boost research speed when assigned</li>
+  <li>The tech tree can be viewed as a dependency graph &mdash; use it to plan your research path</li>
+</ul>
+
+<p>The tech tree is less of a tree and more of a vine that grew through a network closet over the course of several fiscal years. It will make sense. Probably around your second playthrough.</p>
+
+<h3>Workshop &mdash; Upgrades</h3>
+<p>The Workshop tab contains <strong>30 one-time permanent upgrades</strong> organized into categories: productivity, quality of life, infrastructure, and late-game improvements. Once purchased, an upgrade applies forever &mdash; including across prestige resets if you've unlocked the right prestige bonuses.</p>
+
+<p>Upgrades range from the practical (better tooling, faster pipelines) to the personal (better working conditions for your engineers). Some make your buildings faster. Some make your engineers happier. Some just reduce the amount of suffering inflicted by the game's various cruelty mechanics.</p>
+
+<p>Locked upgrades show their unlock conditions. Keep an eye on this tab as you progress &mdash; it's easy to forget about upgrades that became available three hours ago while you were optimizing something else.</p>
+
+<h3>Crafting</h3>
+<p>The Workshop tab also contains <strong>22 crafting recipes</strong> that let you manually convert resources into other resources. Need a specific resource but your buildings aren't producing it fast enough? Craft it.</p>
+
+<p>Some recipes are instant. Some take time. All of them consume input resources to produce output resources, and the conversion rates are... roughly what you'd expect from manual work. Crafting is most useful for bridging resource gaps in the early-to-mid game, or for producing specific rare resources that your infrastructure doesn't generate passively yet.</p>
+
+<p>Crafting is the game's way of saying "you could wait for the automation to handle this, or you could do it yourself right now." It's always a commentary.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="meta-resources">Meta Resources &mdash; The Hidden Levers</h2>
+
+<p>These are the resources that don't produce anything directly but constrain and modify everything else. They are the load-bearing walls of your network empire, and ignoring them is like ignoring spanning tree &mdash; technically possible, briefly exciting, and ultimately catastrophic.</p>
+
+<h3>Sanity</h3>
+<p>Sanity starts at 100 and spends most of the game trying to reach 0. It drains from incidents, audit failures, excessive meetings, high Technical Debt, on-call rotations, and things that are entirely outside your control. It recovers from Coffee, resolved incidents, good documentation, weekends, and the occasional automation success.</p>
+
+<p>When Sanity drops below 50, production takes a significant hit. At 0, your network doesn't stop running &mdash; it just runs badly, slowly, and with an air of quiet desperation. The game, like the industry, does not let you quit. It just makes everything harder until you fix something.</p>
+
+<p>Sanity is the resource that most accurately simulates real network engineering. It's always lower than you think it is.</p>
+
+<h3>Technical Debt</h3>
+<p>Technical Debt accumulates from shortcuts, quick fixes, skipped tests, certain buildings, and the general entropy of running a network. It drains Sanity passively, increases the probability of negative events, and at high levels, slows production across the board.</p>
+
+<p>Some workers &mdash; the ones who care about code quality and operational hygiene &mdash; actively reduce Technical Debt. Certain upgrades help. But the most effective strategy is prevention: avoid the shortcuts that generate it in the first place. Or don't. The ClickOps Pragmatists would understand.</p>
+
+<p>Technical Debt is the only resource in the game where having more of it is unambiguously bad. Unlike your cable drawer, where more is merely aesthetically bad.</p>
+
+<h3>Change Window Tokens</h3>
+<p>Change Window Tokens are required for building, upgrading, and certain other actions. They regenerate on a weekly game-time cycle, and the supply is deliberately scarce.</p>
+
+<p>During Change Freeze season &mdash; yes, there is a Change Freeze season &mdash; they don't regenerate at all. Plan accordingly.</p>
+
+<p>Change Window Tokens are the game's most realistic mechanic. You can't make changes without approval, even in a game about making changes. Welcome to enterprise networking.</p>
+
+<h3>Budget</h3>
+<p>Budget refreshes quarterly and is used for hiring, hardware purchases, and trading. It is never enough. It was never going to be enough. The quarterly allocation was calculated by someone who has never purchased a network switch.</p>
+
+<p>In Q4, unspent Budget disappears. This "use it or lose it" mechanic creates a spending frenzy that will feel deeply familiar to anyone who has ever panic-ordered equipment in December. Budget can also be cut mid-year by reforecast events, because the game's cruelty is methodical.</p>
+
+<p>Budget behaves exactly like real IT budgets: allocated optimistically, spent desperately, cut unexpectedly.</p>
+
+<h3>Happiness</h3>
+<p>Happiness is a 0&ndash;100% multiplier on all worker production. It's covered in the Workers section above, but it deserves a second mention here because it's the single most impactful modifier in the game.</p>
+
+<p>Factors that increase happiness: adequate Coffee, good working conditions, low meeting load, resolved incidents, quality-of-life upgrades. Factors that decrease happiness: no Coffee, high Technical Debt, unresolved incidents, excessive meetings, and the general state of the network.</p>
+
+<p>Keep it above 70% for healthy production. Let it drop below 30% and you'll understand why people leave the industry.</p>
+
+<h3>Coffee</h3>
+<p>Coffee is technically a basic resource. It is spiritually a meta resource. Every engineer consumes it every tick. When the supply hits zero, happiness plummets, production collapses, and the game log fills with increasingly desperate messages.</p>
+
+<p>Coffee infrastructure should be among your first investments, scaled continuously as your headcount grows, and monitored with the same vigilance you'd apply to a core router's CPU utilization.</p>
+
+<p>If Coffee were a stock, your engineers would be its only investors. They'd be buying on margin.</p>
+
+<h3>Goodwill</h3>
+<p>Goodwill is political capital with management. It's earned by maintaining uptime, resolving incidents gracefully, passing audits, and generally keeping the network running without making headlines. It's spent on budget requests, special projects, and certain trades.</p>
+
+<p>Goodwill is hard to accumulate and easy to lose. One bad outage can erase weeks of steady uptime. This is, unfortunately, how the real thing works too.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="trading-post">The Trading Post</h2>
+
+<p>The <strong>Trading Post</strong> tab gives you access to <strong>9 trade partners</strong> &mdash; 8 permanent and 1 seasonal &mdash; each with their own personality, preferred resources, and unique deals.</p>
+
+<p>Trade partners unlock as you progress through eras and meet certain conditions. Each partner has a <strong>relationship level</strong> (0&ndash;100) that improves with every completed trade. Higher relationship levels reduce trade costs by up to 20%, and at relationship level 50, each partner offers a special premium deal.</p>
+
+<p>The partners span the industry ecosystem. You'll trade with vendors, service providers, community projects, and at least one entity whose reliability is best described as "statistically interesting." The seasonal partner shows up during a specific time of year, offers cheap labor, and has a nonzero chance of executing unplanned changes on your production network.</p>
+
+<p>Some trades have a success probability less than 100%. Not every deal goes your way. Some partners are more reliable than others. One of them will try to sell you on a multi-year commitment. Another will help you for free but on their own timeline. This is vendor management as a game mechanic.</p>
+
+<p>General strategy: diversify your trading. Different partners offer different resource conversions, and bottlenecks shift as you progress through eras. A partner who seems useless in Era II might be critical in Era IV.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="events">Events</h2>
+
+<p>Events fire based on probability checks, modified by your infrastructure, workers, and the current season. Murphy's Law is a game mechanic.</p>
+
+<p>There are <strong>20+ events</strong> across three categories:</p>
+
+<h3>Negative Events</h3>
+<p>BGP flaps. DNS outages. Fiber cuts. Certificate expirations. Security scares. Incidents caused by personnel who were not adequately supervised. These drain resources &mdash; Sanity, Uptime Points, Budget, Goodwill &mdash; and can temporarily reduce production.</p>
+
+<p>Negative events are not random punishment. They are probability-based consequences that can be mitigated. Investing in monitoring, compliance, security, and redundancy reduces both the likelihood and the severity. The game rewards the same defensive practices that keep real networks stable.</p>
+
+<p>That said, some events will happen regardless of how well you've prepared. You can't prevent every BGP session flap. You can only prepare for the inevitability that one day, at the worst possible time, a route will go somewhere it shouldn't.</p>
+
+<h3>Positive Events</h3>
+<p>Clean change windows. Vendor credits. Automation successes. Well-executed compliance audits. Good interns. These grant resource bonuses, temporary production boosts, and the warm feeling of something going right for once.</p>
+
+<p>Positive events exist. They are less frequent than negative events. This is not a bug.</p>
+
+<h3>Choice Events</h3>
+<p>Some events present you with 2&ndash;3 options, each with different costs, risks, and rewards. These are where the game stops being an idle clicker and starts being a commentary on corporate decision-making.</p>
+
+<p>Choice events may involve probability rolls &mdash; the outcome isn't always guaranteed. Read the options carefully, assess the tradeoffs, and make your decision. There is rarely a "correct" answer, only answers with different consequences. Just like the last time someone asked you whether to upgrade the firmware during the change window or wait until next quarter.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="seasons">Seasonal Cycles</h2>
+
+<p>The game runs on a calendar. Each game-day takes approximately one real minute. A game-year is 360 days, which maps to roughly 6 real hours. Seven seasonal cycles rotate through the year, each modifying gameplay in ways that reward planning and punish complacency.</p>
+
+<h3>The Quarterly Cycle</h3>
+<ul>
+  <li><strong>Q1 &mdash; Planning Season:</strong> Design and documentation bonuses. Budget is freshly allocated. Hope is high. Plans are ambitious.</li>
+  <li><strong>Q2 &mdash; Execution Season:</strong> General production bonuses. This is when things get done. Or at least, when things are scheduled to get done.</li>
+  <li><strong>Q3 &mdash; Conference Season:</strong> Trading bonuses and special events. Your engineers come back from conferences with new ideas, strong opinions, and vendor swag.</li>
+  <li><strong>Q4 &mdash; Budget Season:</strong> Use-it-or-lose-it mechanics. Audit pressure increases. Everyone is simultaneously trying to spend remaining Budget and pretend they don't need more next year.</li>
+</ul>
+
+<h3>Special Seasons</h3>
+<ul>
+  <li><strong>Change Freeze:</strong> No Change Window Tokens regenerate. Uptime bonuses, Sanity drain. Things still break. You just can't fix them. Happy holidays.</li>
+  <li><strong>Audit Season:</strong> Compliance resource consumption doubles. Happens twice per year, because auditors work on a schedule designed to maximize inconvenience.</li>
+  <li><strong>Summer:</strong> Interns arrive. Vacation coverage gaps appear. Productivity dips slightly. The interns are enthusiastic. The enthusiasm is load-bearing.</li>
+</ul>
+
+<p>Seasons overlap &mdash; Audit Season can coincide with Q1 or Q3, Change Freeze spans the end of Q4 into Q1, and Summer introduces variables that no amount of planning fully accounts for.</p>
+
+<p><strong>Strategy:</strong> Plan your spending and research around the calendar. Stockpile compliance resources before Audit Season. Spend Budget before Q4 ends. Build up Coffee reserves before Summer. Brace for Change Freeze.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="prestige">The Forklift Upgrade &mdash; Prestige</h2>
+
+<p>At some point, you'll have built a network empire. Buildings will be producing resources at rates that require scientific notation. Your tech tree will be mostly researched. Progress will slow to a crawl.</p>
+
+<p>And then you'll tear it all down and start over. On purpose.</p>
+
+<h3>The Concept</h3>
+<p>The <strong>Forklift Upgrade</strong> is the game's prestige system, named after the time-honored networking tradition of replacing all your gear at once rather than incrementally upgrading. You reset most of your progress in exchange for <strong>Industry Cred</strong> &mdash; a prestige currency that purchases permanent bonuses that make your next run faster, easier, and more interesting.</p>
+
+<h3>What Resets</h3>
+<ul>
+  <li>All resources (back to zero)</li>
+  <li>All buildings (demolished)</li>
+  <li>All workers (laid off, but with generous severance in your headcanon)</li>
+  <li>All technologies (forgotten, apparently)</li>
+  <li>All trade relationships (they don't remember you)</li>
+  <li>Seasonal progress (calendar resets)</li>
+  <li>Technical Debt (silver lining)</li>
+</ul>
+
+<h3>What Persists</h3>
+<ul>
+  <li><strong>Industry Cred</strong> (your prestige currency)</li>
+  <li><strong>Achievements</strong> (permanent bragging rights)</li>
+  <li><strong>Prestige upgrades</strong> (permanent bonuses purchased with Industry Cred)</li>
+  <li><strong>Automation Philosophy conviction</strong> (your beliefs survive corporate restructuring)</li>
+</ul>
+
+<h3>Industry Cred</h3>
+<p>Industry Cred is calculated based on your total automation output and uptime at the time of reset. Bonuses apply for completing eras, maintaining documentation, keeping Technical Debt low, and sustaining high Happiness. The formula rewards well-run networks over fast networks.</p>
+
+<p>The <strong>Forklift Upgrade</strong> tab shows a preview of how much Industry Cred you'd earn if you reset now, what would be lost, and what would persist. Use this preview to time your resets strategically.</p>
+
+<h3>Prestige Upgrades</h3>
+<p>There are <strong>15 prestige upgrades</strong> purchasable with Industry Cred. They range from modest starting bonuses (begin your next run with a small head start) to game-changing advantages (skip entire eras, start with pre-built infrastructure). We won't tell you what they are. Discovery is half the fun, and the other half is calculating which one to buy first.</p>
+
+<h3>Milestones</h3>
+<p>The game tracks how many Forklift Upgrades you've completed with <strong>7 milestone titles</strong>. Your first reset earns you a title. Your twentieth earns you a different one. The titles escalate in a way that suggests the game has opinions about what constitutes a career trajectory.</p>
+
+<h3>When to Reset</h3>
+<p>Your first Forklift Upgrade should happen when progress feels like it's stalled &mdash; probably mid-Era IV or early Era V. The prestige bonuses will make your second run dramatically faster. Each subsequent reset pushes you further before diminishing returns set in.</p>
+
+<p>The Forklift Upgrade is named after the practice of replacing all your gear at once. In the game, as in life, it's simultaneously terrifying and liberating. Unlike real life, the game doesn't bill you for equipment disposal.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="philosophies">Automation Philosophies</h2>
+
+<p>There are <strong>6 Automation Philosophies</strong> &mdash; schools of thought about how networks should be managed. Think of them as professional creeds, each with its own dogma, its own benefits, and its own blind spots.</p>
+
+<h3>How They Work</h3>
+<p>You earn <strong>Conviction</strong> by running automation &mdash; 1 Conviction per 100 Automation Jobs completed. Conviction is spent to subscribe to philosophical tenets. Each philosophy provides a passive bonus and imposes a small tradeoff. You can follow multiple philosophies, but bonuses diminish:</p>
+<ul>
+  <li><strong>Primary philosophy:</strong> 100% bonus</li>
+  <li><strong>Secondary philosophy:</strong> 75% bonus</li>
+  <li><strong>Tertiary philosophy:</strong> 50% bonus</li>
+</ul>
+
+<p>Conviction persists across Forklift Upgrades, so your philosophical commitments survive corporate restructuring.</p>
+
+<h3>The Six Philosophies</h3>
+<ul>
+  <li><strong>Infrastructure as Code Purists</strong> &mdash; Everything is version-controlled. Everything is declarative. If it's not in Git, it doesn't exist.</li>
+  <li><strong>ClickOps Pragmatists</strong> &mdash; Sometimes you just need to fix the thing. Ideology is nice, but uptime pays the bills.</li>
+  <li><strong>The Church of Uptime</strong> &mdash; Five nines is a religion. Maintenance windows are heresy. The pager is a sacrament.</li>
+  <li><strong>DevOps Evangelists</strong> &mdash; Pipelines for everything. Containers for everything. "Have you considered a microservice?" for everything.</li>
+  <li><strong>Open Source Advocates</strong> &mdash; Community over vendor. Transparency over licensing fees. Pull requests over support tickets.</li>
+  <li><strong>The Observability Order</strong> &mdash; If you can't measure it, you can't manage it. If you can't graph it, does it even exist?</li>
+</ul>
+
+<p>Choose based on your play style, your strategic needs, or your deeply held professional beliefs. The ClickOps Pragmatists won't judge you. That's their whole thing.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="achievements">Achievements</h2>
+
+<p>There are <strong>30 achievements</strong> across three categories:</p>
+
+<h3>Progression</h3>
+<p>Milestone markers for your journey &mdash; first ping, first automation job, reaching new eras, scaling your team. These confirm you're making progress and provide a satisfying notification when they trigger.</p>
+
+<h3>Humor</h3>
+<p>Rewards for specific experiences, accumulations, and situations that network engineers will recognize on a personal level. Some will make you laugh. Some will make you wince. Most will do both. You'll earn them naturally by playing the game, because the experiences they reference are unavoidable in this industry.</p>
+
+<h3>Secret</h3>
+<p>There are <strong>5 secret achievements</strong> that don't appear in the list until you've unlocked them. We won't tell you what they are &mdash; that would defeat the purpose. But we will say that at least one rewards curiosity, at least one rewards patience, and at least one rewards a specific proper noun that may or may not be a person.</p>
+
+<p>All achievements are permanent. They persist across Forklift Upgrades. The achievement counter in the header shows your unlocked count versus the visible total &mdash; secret achievements aren't counted until discovered.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="ui-guide">UI Navigation Guide</h2>
+
+<h3>Layout</h3>
+<p>The game uses a three-panel layout:</p>
+<ul>
+  <li><strong>Left sidebar:</strong> Resource panel showing all unlocked resources with amounts and production rates</li>
+  <li><strong>Center:</strong> Tabbed main content area where most interaction happens</li>
+  <li><strong>Bottom:</strong> Resizable syslog-style game log</li>
+  <li><strong>Top header:</strong> Click button, time display, season indicator, and toolbar</li>
+</ul>
+
+<h3>The Header</h3>
+<ul>
+  <li><strong><code>&gt; show version</code></strong> &mdash; Your CLI Command generator. Click it.</li>
+  <li><strong>Day / Quarter / Year</strong> &mdash; Current game time. Hover for total tick count.</li>
+  <li><strong>Season indicator</strong> &mdash; Shows active seasonal effects with icons.</li>
+  <li><strong>Achievement counter</strong> &mdash; Unlocked / visible total.</li>
+  <li><strong>Toolbar</strong> &mdash; User Guide (opens this page), Settings (opens settings modal), Pause (toggles game pause).</li>
+</ul>
+
+<h3>Tabs</h3>
+<p>Tabs unlock dynamically as you progress. New tabs glow briefly when they first appear.</p>
+
+<table>
+  <thead>
+    <tr><th>Tab</th><th>Purpose</th><th>Available</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Operations Center</td><td>Build and manage buildings</td><td>Always</td></tr>
+    <tr><td>The Village</td><td>Hire and manage workers</td><td>When workers unlock</td></tr>
+    <tr><td>Research Lab</td><td>Research technologies</td><td>When techs unlock</td></tr>
+    <tr><td>Workshop</td><td>Purchase upgrades and craft resources</td><td>When upgrades unlock</td></tr>
+    <tr><td>Trading Post</td><td>Trade with partners</td><td>When partners unlock</td></tr>
+    <tr><td>Event Log</td><td>View active and past events</td><td>After first event</td></tr>
+    <tr><td>Achievements</td><td>Track unlocked achievements</td><td>After first achievement</td></tr>
+    <tr><td>Forklift Upgrade</td><td>Prestige system</td><td>Deep into progression</td></tr>
+    <tr><td>Philosophy</td><td>Choose your automation creed</td><td>When Conviction is available</td></tr>
+    <tr><td>Statistics</td><td>Track your numbers</td><td>Always</td></tr>
+  </tbody>
+</table>
+
+<p>The Statistics tab is for the engineers who love dashboards more than the network itself. You know who you are.</p>
+
+<h3>The Game Log</h3>
+<p>The bottom panel is a syslog-style terminal that reports everything happening in your game using facility codes that anyone who's stared at a syslog server at 3 AM will recognize immediately.</p>
+<ul>
+  <li><strong>Color coded:</strong> Green for positive events, amber for warnings, red for critical incidents, blue for research, purple for staff messages</li>
+  <li><strong>Filterable:</strong> Toggle buttons above the log let you show/hide message categories (system, building, worker, resource, event, achievement, research, crafting)</li>
+  <li><strong>Resizable:</strong> Use the arrow buttons to cycle through collapsed, single-line, small, and expanded views</li>
+</ul>
+
+<p>The game log is the most technically authentic part of the game. If you've ever set up a syslog server and immediately regretted the volume, you'll feel right at home.</p>
+
+<h3>Settings</h3>
+<p>Access settings via the gear icon in the header toolbar:</p>
+<ul>
+  <li><strong>Theme:</strong> Dark (default), Light, or Terminal Green for maximum aesthetic commitment</li>
+  <li><strong>Animations:</strong> Toggle on/off</li>
+  <li><strong>Number format:</strong> Standard, Scientific, or Engineering notation</li>
+  <li><strong>Auto-save interval:</strong> 15 seconds to 5 minutes</li>
+  <li><strong>Sound:</strong> Enable/disable with volume control</li>
+  <li><strong>Data management:</strong> Save, Load, Export, Import, and the nuclear option (Wipe)</li>
+</ul>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="saving">Saving, Loading, and Offline Play</h2>
+
+<h3>Saving</h3>
+<ul>
+  <li><strong>Auto-save</strong> runs at a configurable interval (default: 30 seconds). It also saves when you close the browser tab.</li>
+  <li><strong>Manual save</strong> via the Settings panel.</li>
+  <li><strong>Export</strong> copies your entire save as a compressed string to your clipboard. This is your backup strategy. It works exactly as well as backup strategies in the field &mdash; which is to say, it works if you actually use it.</li>
+  <li><strong>Import</strong> pastes a previously exported save string to restore your game.</li>
+</ul>
+
+<h3>Loading</h3>
+<p>Your save is stored in localStorage. When you open the game, it restores automatically. If a save is found, the game log will confirm restoration.</p>
+
+<h3>The Nuclear Option</h3>
+<p><strong>Wipe All Progress</strong> deletes everything. It requires confirmation. This is the <code>write erase</code> of the game. There is no <code>reload</code> after this.</p>
+
+<h3>Offline Play</h3>
+<p>When you close the browser and return later, the game calculates what you would have earned while away &mdash; at <strong>50% of your normal production rate</strong>, capped at <strong>24 real hours</strong> of accumulated offline time. Events, trades, and seasonal changes do not occur while offline.</p>
+
+<p>Offline production is the game's way of saying "go outside." The cap is the game's way of saying "but come back."</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="strategy">Strategy Tips</h2>
+
+<h3>Early Game &mdash; Eras I and II</h3>
+<ul>
+  <li><strong>Click actively.</strong> Your clicks are your primary income source in Era I. Buildings will overtake you, but not yet.</li>
+  <li><strong>Build Coffee infrastructure early.</strong> Your future self, buried under a dozen unhappy engineers with empty mugs, will thank you.</li>
+  <li><strong>Don't neglect documentation resources.</strong> They seem useless early. They feed into critical systems later.</li>
+  <li><strong>Research broadly in Era I.</strong> Technologies that look irrelevant now unlock critical paths later. The tech tree rewards exploration.</li>
+  <li><strong>Build housing before you need it.</strong> Worker housing shortages feel exactly as frustrating in the game as they do in real metropolitan areas.</li>
+  <li><strong>Spend Budget on workers first.</strong> Workers produce resources passively. Buildings are important, but workers compound.</li>
+</ul>
+
+<h3>Mid Game &mdash; Eras III and IV</h3>
+<ul>
+  <li><strong>The platform transition is the biggest inflection point.</strong> Save resources for it. When the source-of-truth technology unlocks, prioritize it. Everything cascades from there.</li>
+  <li><strong>Start managing Technical Debt seriously.</strong> It's been quietly accumulating since Era I, and around Era III, it starts hurting. Assign workers who reduce it. Research technologies that control it.</li>
+  <li><strong>Prepare for audits.</strong> Compliance resources become important. Audit Season will arrive whether you're ready or not, and being unprepared costs Goodwill you can't easily replace.</li>
+  <li><strong>Consider your first Forklift Upgrade.</strong> If progress stalls in mid-Era IV or early Era V, check the Forklift Upgrade tab. The prestige bonuses make your next run dramatically faster.</li>
+  <li><strong>Check the Workshop regularly.</strong> It's easy to miss upgrades that became available while you were focused on buildings and research.</li>
+  <li><strong>Diversify your trade partners.</strong> The Trading Post becomes increasingly valuable as resource bottlenecks shift. A partner you ignored in Era II might solve your Era IV problem.</li>
+</ul>
+
+<h3>Late Game &mdash; Eras V and VI</h3>
+<ul>
+  <li><strong>This is idle territory.</strong> Check in a few times a day. Make strategic decisions. Let your automation empire run.</li>
+  <li><strong>Philosophy choices compound.</strong> The bonuses from your Automation Philosophies become increasingly significant at scale. Choose deliberately.</li>
+  <li><strong>There is an endgame technology.</strong> It's expensive. It requires resources from across every category. It's worth it.</li>
+  <li><strong>Prestige upgrades from multiple resets stack.</strong> Your third or fourth playthrough will feel dramatically different from your first.</li>
+</ul>
+
+<h3>General Wisdom</h3>
+<ul>
+  <li><strong>Sanity above 50.</strong> Below that, production penalties compound. Above that, you're fine.</li>
+  <li><strong>Coffee above 0.</strong> Below that, everything falls apart. There is no graceful degradation.</li>
+  <li><strong>Technical Debt below 100.</strong> Manageable. Above 300 is a five-alarm emergency.</li>
+  <li><strong>Plan around seasons.</strong> The calendar is predictable. Use it. Stockpile before Audit Season. Spend before Q4 ends. Brace for Change Freeze.</li>
+  <li><strong>Diversify your workforce.</strong> Each engineer type has unique strengths. A balanced team outperforms a stack of any single type.</li>
+  <li><strong>Read the game log.</strong> It's funny, but it also contains useful gameplay information about what just happened and why.</li>
+</ul>
+
+<p>The best strategy in this game, as in real network engineering, is to automate the boring stuff and pay attention to the interesting stuff.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<p class="faq-q">Q: I ran out of Coffee and all my engineers are miserable. Is this a bug?</p>
+<p class="faq-a">A: No. This is a feature, and an uncomfortably accurate simulation. Build more Coffee infrastructure. Scale it ahead of hiring. Treat it like a production dependency, because it is one.</p>
+
+<p class="faq-q">Q: What does Technical Debt actually do?</p>
+<p class="faq-a">A: It drains Sanity passively, slows production at high levels, and increases the probability of negative events. Exactly like real technical debt, except in the game you can see the number. In real life, you just feel it.</p>
+
+<p class="faq-q">Q: How do I get more Change Window Tokens?</p>
+<p class="faq-a">A: They regenerate on a weekly game-time cycle. Some buildings and technologies increase the regeneration rate. During Change Freeze, they don't regenerate at all. This is by design and it is not negotiable.</p>
+
+<p class="faq-q">Q: When should I do my first Forklift Upgrade?</p>
+<p class="faq-a">A: When progress feels like it's stalled &mdash; typically mid-Era IV or early Era V. Check the Forklift Upgrade tab to preview your Industry Cred earnings. If the number looks good and you're bored, it's time. If the number looks bad, keep playing until it doesn't.</p>
+
+<p class="faq-q">Q: Can I lose the game?</p>
+<p class="faq-a">A: No. There are no permanent loss states. At 0 Sanity, everything slows down dramatically, but you can always recover. The game, like the networking industry, does not let you fail permanently. It just lets you be uncomfortable until you fix something.</p>
+
+<p class="faq-q">Q: Do I need to keep the browser tab open?</p>
+<p class="faq-a">A: No. Offline production runs at 50% rate, capped at 24 hours. But you'll miss events, trades, seasonal transitions, and the satisfaction of watching numbers increment in real time.</p>
+
+<p class="faq-q">Q: What are the secret achievements?</p>
+<p class="faq-a">A: Secret.</p>
+
+<p class="faq-q">Q: No, seriously, what are they?</p>
+<p class="faq-a">A: Seriously secret. But if you're the kind of engineer who reads documentation this thoroughly, you already have the personality traits needed to find them.</p>
+
+<p class="faq-q">Q: Is there an endgame?</p>
+<p class="faq-a">A: Yes. There is a final technology that represents the culmination of everything you've built. It requires resources from every category and unlocks a reward that makes the entire journey worth it. We won't tell you what it's called. You'll know.</p>
+
+<p class="faq-q">Q: Can I follow multiple Automation Philosophies?</p>
+<p class="faq-a">A: Yes, with diminishing returns. Your primary philosophy operates at 100%, your secondary at 75%, and your tertiary at 50%. Choose your primary carefully. Or don't. The ClickOps Pragmatists have opinions about over-planning.</p>
+
+<p class="faq-q">Q: The game log is really noisy. Can I filter it?</p>
+<p class="faq-a">A: Yes. Toggle buttons above the log let you filter by message type. You can also resize the log panel or collapse it entirely. But you should read it sometimes. It's telling you things. Some of them are even useful.</p>
+
+<p class="faq-q">Q: Is this game historically accurate to the network engineering profession?</p>
+<p class="faq-a">A: In the same way that a documentary is accurate &mdash; the events are real, the feelings are real, and the timeline is compressed for dramatic effect. If anything in this game hasn't happened to you personally, give it time.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="glossary">Glossary</h2>
+
+<table>
+  <thead>
+    <tr><th>Term</th><th>Meaning</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Tick</td><td>One game cycle (2 real seconds). All production rates are per-tick.</td></tr>
+    <tr><td>Era</td><td>One of six progression phases, each representing a stage of network maturity.</td></tr>
+    <tr><td>Forklift Upgrade</td><td>The prestige reset. Tear it all down, start over, keep the wisdom.</td></tr>
+    <tr><td>Industry Cred</td><td>Prestige currency earned from Forklift Upgrades.</td></tr>
+    <tr><td>Conviction</td><td>Philosophy currency earned from automation output.</td></tr>
+    <tr><td>Change Window Token</td><td>Resource required for building and upgrading. Finite and precious.</td></tr>
+    <tr><td>Meta Resource</td><td>Resources that constrain other systems (Sanity, Technical Debt, etc.).</td></tr>
+    <tr><td>Source of Truth</td><td>The authoritative platform for network data. Also the name of this game.</td></tr>
+    <tr><td>Golden Config</td><td>An ideal, validated device configuration. The platonic ideal of <code>show run</code>.</td></tr>
+    <tr><td>Production Rate</td><td>Resources generated per tick, shown as per-second in the sidebar.</td></tr>
+    <tr><td>Exponential Pricing</td><td>Each copy of a building costs more than the last. Scaling is expensive.</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="one-more-thing">One More Thing</h2>
+
+<p>You're reading a user guide for a game about network automation. The fact that you read the documentation &mdash; all of it, all the way to the end &mdash; says something about you. Something good.</p>
+
+<p>Now go automate something.</p>
+
+<pre><code>%DOC-5-COMPLETE: User guide acknowledged. Estimated preparation level: 10% above
+                 average new hire. Deploying confidence. Good luck. You'll need it.
+                 The network always needs something.</code></pre>
+
+<p><a href="#top" class="back-to-top">&uarr; Back to top</a></p>
+
+</article>
+</body>
+</html>
