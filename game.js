@@ -5867,6 +5867,20 @@
     gameState.unlocked = deserializeUnlocked(state.unlocked);
     gameState.time = state.time;
     gameState.statistics = state.statistics;
+    if (!gameState.statistics.allTime) {
+      gameState.statistics.allTime = {
+        totalBuildingsBuilt: 0,
+        totalWorkersHired: 0,
+        totalTechsResearched: 0,
+        totalClicks: 0,
+        totalTradesCompleted: 0,
+        totalPlayTimeMs: 0,
+        totalRunsCompleted: 0
+      };
+    }
+    if (!gameState.statistics.eventsExperienced) gameState.statistics.eventsExperienced = [];
+    if (gameState.statistics.totalClicks === void 0) gameState.statistics.totalClicks = 0;
+    if (gameState.statistics.totalTradesCompleted === void 0) gameState.statistics.totalTradesCompleted = 0;
     gameState.meta = state.meta;
     gameState.research = state.research || { activeId: null };
     if (state.crafting) mergeEntities(gameState.crafting, state.crafting);
@@ -6084,6 +6098,17 @@
     const result = calculatePotentialIC();
     const icEarned = result.totalIC;
     const stats = gameState.statistics;
+    if (!stats.allTime) {
+      stats.allTime = {
+        totalBuildingsBuilt: 0,
+        totalWorkersHired: 0,
+        totalTechsResearched: 0,
+        totalClicks: 0,
+        totalTradesCompleted: 0,
+        totalPlayTimeMs: 0,
+        totalRunsCompleted: 0
+      };
+    }
     const at = stats.allTime;
     at.totalBuildingsBuilt += stats.totalBuildingsBuilt;
     at.totalWorkersHired += stats.totalWorkersHired;
@@ -10098,7 +10123,10 @@ You will earn ${ic.totalIC} Industry Cred.
 RESET: Resources, buildings, workers, technologies, upgrades, trades, seasons
 KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
       if (window.confirm(msg)) {
-        performPrestige();
+        const result = performPrestige();
+        if (!result || !result.success) {
+          window.alert("Forklift Upgrade failed. Please save and reload the page.");
+        }
       }
     });
     resetSection.appendChild(resetBtn);
