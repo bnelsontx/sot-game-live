@@ -22,13 +22,43 @@
       margin: 0 auto;
       padding: 48px 24px 80px;
     }
-    h1 {
-      font-size: 2em;
-      font-weight: 700;
-      color: #e0e0e0;
-      margin: 0 0 8px;
+    .guide-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 0 0 4px;
+      padding-bottom: 16px;
       border-bottom: 2px solid #0088cc;
-      padding-bottom: 12px;
+    }
+    .guide-title-icon {
+      font-size: 48px;
+      color: #0088cc;
+      line-height: 1;
+    }
+    .guide-title-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .guide-title-main {
+      font-size: 2.4em;
+      font-weight: 700;
+      color: #2dd4bf;
+      letter-spacing: 0.5px;
+    }
+    .guide-title-sub {
+      font-size: 1.3em;
+      color: #8892b0;
+      font-style: italic;
+    }
+    .guide-title-label {
+      text-align: center;
+      font-size: 1em;
+      color: #8892b0;
+      margin: 8px 0 0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
     h2 {
       font-size: 1.5em;
@@ -156,7 +186,14 @@
 <body>
 <article class="guide" id="top">
 
-<h1>Source of Truth or Consequences &mdash; User Guide</h1>
+<div class="guide-title">
+  <span class="guide-title-icon">&#x2B21;</span>
+  <div class="guide-title-text">
+    <span class="guide-title-main">Source of Truth</span>
+    <span class="guide-title-sub">or Consequences</span>
+  </div>
+</div>
+<p class="guide-title-label">User Guide</p>
 
 <pre><code>%DOC-5-LOADED: User guide initialized. Reading documentation before playing?
                We're already proud of you. That puts you ahead of 90% of the industry.</code></pre>
