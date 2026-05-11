@@ -1631,6 +1631,12 @@ body.no-animations *::after {
     min-height: 44px;
   }
 
+  .event-banner {
+    width: calc(100vw - 16px);
+    right: 8px;
+    top: 8px;
+  }
+
   .event-choice-btn {
     min-height: 48px;
     padding: 14px;
@@ -2356,27 +2362,32 @@ body.no-animations *::after {
 /* ===== Event Banner ===== */
 
 .event-banner {
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  width: 320px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  z-index: 100;
   border-radius: var(--radius-lg);
   padding: 16px;
-  margin-bottom: 8px;
+  background: var(--bg-secondary);
   animation: eventSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 16px var(--shadow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .event-banner--negative {
-  background: rgba(239, 68, 68, 0.12);
+  background: color-mix(in srgb, var(--bg-secondary) 85%, var(--negative));
   border: 1px solid var(--negative);
 }
 
 .event-banner--positive {
-  background: rgba(34, 197, 94, 0.12);
+  background: color-mix(in srgb, var(--bg-secondary) 85%, var(--positive));
   border: 1px solid var(--positive);
 }
 
 .event-banner--choice {
-  background: rgba(63, 120, 201, 0.12);
+  background: color-mix(in srgb, var(--bg-secondary) 85%, var(--accent));
   border: 1px solid var(--accent);
 }
 
@@ -2620,11 +2631,11 @@ body.no-animations *::after {
 @keyframes eventSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 

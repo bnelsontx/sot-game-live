@@ -6249,6 +6249,7 @@
     gameState.prestige.industryCred -= bonus.cost;
     gameState.prestige.purchasedUpgrades[upgradeId] = true;
     rebuildBonusCache2();
+    applyEffect(bonus.effect);
     recalculateRates();
     emitter.emit("prestigeUpgradePurchased", { upgradeId });
     emitter.emit("logMessage", {
@@ -8679,7 +8680,7 @@
       progressBar.style.width = `${Math.round(progress.percent * 100)}%`;
       progressOuter.appendChild(progressBar);
       const progressText = el("span", "tech-progress-text");
-      progressText.textContent = `${progress.current} / ${progress.total} ticks`;
+      progressText.textContent = `${Math.round(progress.current)} / ${Math.round(progress.total)} ticks`;
       section.append(header, descEl, progressOuter, progressText);
       panelEl3.appendChild(section);
     }
@@ -8843,7 +8844,7 @@
       const bar = activeSection.querySelector(".tech-progress-bar");
       if (bar) bar.style.width = `${Math.round(progress.percent * 100)}%`;
       const text = activeSection.querySelector(".tech-progress-text");
-      if (text) text.textContent = `${progress.current} / ${progress.total} ticks`;
+      if (text) text.textContent = `${Math.round(progress.current)} / ${Math.round(progress.total)} ticks`;
     }
     const cards = panelEl3.querySelectorAll(".tech-card:not(.tech-card--completed)");
     for (const card of cards) {
@@ -10140,6 +10141,9 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
       msEl.textContent = `Current Title: ${milestone.title}`;
       panelEl8.appendChild(msEl);
     }
+    const balanceSection = el("div", "prestige-ic-balance");
+    balanceSection.innerHTML = "";
+    panelEl8.appendChild(balanceSection);
     const upgTitle = el("div", "prestige-section-title");
     upgTitle.textContent = "Prestige Upgrades";
     panelEl8.appendChild(upgTitle);
@@ -10208,6 +10212,13 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     if (currentPurchased !== lastPurchasedCount2) {
       rebuild8();
       return;
+    }
+    const balanceSection = panelEl8.querySelector(".prestige-ic-balance");
+    if (balanceSection) {
+      const available = gameState.prestige?.industryCred || 0;
+      const totalEarned = (gameState.prestige?.runHistory || []).reduce((sum, r) => sum + (r.icEarned || 0), 0);
+      const spent = totalEarned - available;
+      balanceSection.innerHTML = `<div class="prestige-ic-row"><strong>Available IC:</strong> ${formatNum(available)}</div><div class="prestige-ic-row"><strong>Spent:</strong> ${formatNum(spent)}</div><div class="prestige-ic-row"><strong>Total Earned:</strong> ${formatNum(totalEarned)}</div>`;
     }
     const calcBody = panelEl8.querySelector(".prestige-calc-body");
     if (calcBody) {
@@ -10575,7 +10586,7 @@ KEEP: Industry Cred, prestige upgrades, achievements, philosophy`;
     if (!achievementsAlreadyUnlocked) {
       emitter.once("achievementUnlocked", () => unlockTab("achievements"));
     }
-    const prestigeUnlocked = gameState.technologies.nautobot_jobs?.researched || false;
+    const prestigeUnlocked = gameState.technologies.nautobot_jobs?.researched || (gameState.prestige?.totalResets || 0) > 0 || (gameState.prestige?.industryCred || 0) > 0;
     registerTab("prestige", "Forklift Upgrade", init20, { unlocked: prestigeUnlocked });
     if (!prestigeUnlocked) {
       const unsub = emitter.on("researchCompleted", ({ techId }) => {
