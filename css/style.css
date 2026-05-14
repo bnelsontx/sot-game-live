@@ -818,6 +818,10 @@ body.no-animations *::after {
   opacity: 0.8;
 }
 
+.bld-pin-btn + .edu-info-btn {
+  margin-left: 0;
+}
+
 .era-group[data-era="pinned"] .era-name {
   color: var(--teal);
 }
@@ -1631,7 +1635,8 @@ body.no-animations *::after {
     min-height: 44px;
   }
 
-  .event-banner {
+  .event-banner,
+  .edu-banner {
     width: calc(100vw - 16px);
     right: 8px;
     top: 8px;
@@ -3439,6 +3444,110 @@ body.no-animations *::after {
   0% { opacity: 0; transform: scale(0.8); }
   30% { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(1.1); }
+}
+
+/* ===== Educational Info Button & Banner ===== */
+
+.edu-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-left: auto;
+  padding: 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.trade-partner-header .edu-info-btn {
+  margin-left: 0;
+}
+
+.edu-info-btn:hover {
+  color: var(--accent);
+}
+
+.edu-banner {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  width: 340px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  z-index: 100;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  background: color-mix(in srgb, var(--bg-secondary) 88%, var(--teal));
+  border: 1px solid var(--teal);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 12px var(--teal-glow);
+  animation: eventSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.edu-banner--dismissing {
+  animation: eduSlideOut 0.25s ease-in forwards;
+}
+
+.edu-banner-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.edu-type-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--teal);
+  color: var(--bg-primary);
+}
+
+.edu-banner-title {
+  font-weight: 700;
+  font-size: 15px;
+  flex: 1;
+  min-width: 0;
+}
+
+.edu-banner-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.edu-banner-close:hover {
+  color: var(--text-primary);
+}
+
+.edu-banner-desc {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@keyframes eduSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 }
 
 /* ===== Reduced Motion ===== */

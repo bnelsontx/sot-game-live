@@ -18,6 +18,10 @@ You can play the live game at: [https://bnelsontx.github.io/sot-game-live/](http
 
 You start as a lone network engineer typing `show run` into a dusty console port. You end up commanding a fully automated, self-healing multi-site network empire. Every step in between is painfully, hilariously real.
 
+## Learn While You Play
+
+Every building, technology, worker role, and upgrade in the game corresponds to a real network engineering concept. Look for the **ℹ** button on items throughout the game — it opens a short, serious description of the real-world technology behind the game element. You'll learn about protocols (SSH, BGP, OSPF), tools (Ansible, Nornir, Nautobot), practices (GitOps, ZTP, CI/CD), and roles (SRE, NOC Technician, Automation Architect) as you progress through the six eras of network engineering maturity.
+
 ## Quick Start Guide
 
 1. **Pour yourself a coffee.** You're going to need it. Your engineers will too.

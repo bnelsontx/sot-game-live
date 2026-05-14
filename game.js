@@ -5116,6 +5116,136 @@
     }
   ];
 
+  // data/educational.json
+  var educational_default = {
+    buildings: {
+      terminal_emulator: "Terminal emulators (SecureCRT, PuTTY, iTerm2) are software applications that provide command-line access to network devices over serial or SSH connections. They emulate the behavior of hardware video terminals, translating keystrokes into control sequences understood by remote systems.",
+      console_cable_drawer: "Console cables (typically RJ-45 to DB-9 or USB) provide out-of-band serial access to network devices for initial configuration or recovery when network connectivity is unavailable. This management plane access is critical for device bootstrapping and disaster recovery.",
+      patch_panel: "A patch panel is a passive networking component that terminates cable runs from wall jacks in a structured cabling system. It allows circuits to be flexibly connected using short patch cables, simplifying cable management and reducing wear on permanent horizontal cabling per TIA/EIA-568 standards.",
+      syslog_server: "Syslog (RFC 5424) is a standard protocol for message logging, allowing network devices to send event notifications to a central server. Syslog messages include facility codes, severity levels (0\u20137), and timestamps, enabling centralized monitoring, troubleshooting, and compliance auditing.",
+      the_spreadsheet_of_truth: 'In network engineering, a "source of truth" is the authoritative data store for network state. Before purpose-built tools like Nautobot, spreadsheets served as ad-hoc inventory and IP address management systems, inevitably leading to data inconsistency, version conflicts, and operational drift.',
+      tftp_server: "TFTP (Trivial File Transfer Protocol, RFC 1350) is a simplified UDP-based file transfer protocol used primarily for bootstrapping network devices, transferring firmware images, and loading configurations during initial provisioning. Unlike FTP, it requires no authentication and has no directory listing capability.",
+      ide: "An Integrated Development Environment combines a code editor, debugger, linter, and build tools in one application. In network automation, IDEs with Python and YAML language server extensions accelerate script development, catch syntax errors early, and provide inline documentation.",
+      git_repository: "Git is a distributed version control system created by Linus Torvalds that tracks changes to files over time, enabling branching, merging, collaboration, and full audit history. In network automation, Git stores infrastructure-as-code definitions and configuration templates.",
+      token_generator: "API tokens are credential strings used for authentication when making programmatic requests to REST APIs, replacing interactive username/password authentication for machine-to-machine communication. Token rotation and scoped permissions are critical security practices.",
+      template_workshop: "Jinja2 is a Python-based templating engine widely used in network automation to generate device configurations dynamically. Templates combine static configuration patterns with variable data from a source of truth, ensuring consistency across hundreds or thousands of devices.",
+      jump_host: "A jump host (bastion host) is a hardened server placed at a network security boundary, providing a single audited point of access for administrators to reach devices in secured segments. All administrative sessions pass through it, enabling centralized logging and access control.",
+      monitoring_dashboard: "Network monitoring dashboards visualize metrics collected via SNMP polling, streaming telemetry, or API queries. Tools like Grafana render time-series data showing device health, interface utilization, error rates, and SLA compliance in real time.",
+      nautobot_instance: "Nautobot is an open-source network source of truth and automation platform maintained by Network to Code. It provides a single authoritative repository for network data\u2014device inventory, IP addressing, circuits, and topology\u2014with REST and GraphQL APIs for integration with automation workflows.",
+      ansible_control_node: "Ansible is an agentless automation framework that executes tasks defined in YAML playbooks against remote devices via SSH or API. The control node is the machine where Ansible is installed and playbooks are run. Ansible's idempotent design ensures running a playbook twice produces the same result.",
+      ci_cd_pipeline: "CI/CD (Continuous Integration/Continuous Deployment) pipelines automatically build, test, and deploy code changes when committed to a repository. In network automation, CI pipelines validate configuration changes through linting, syntax checks, and integration tests before deployment.",
+      ipam_system: "IP Address Management (IPAM) systems centrally plan, track, and administer IP address spaces and associated DNS/DHCP services. They enforce allocation policies, prevent conflicts, and maintain a real-time view of IP utilization across the entire network.",
+      container_registry: "A container registry stores and distributes OCI-compliant container images (Docker images), enabling version-controlled, reproducible deployments. Registries support image tagging, vulnerability scanning, and access control for software distribution pipelines.",
+      secrets_vault: "Secrets management systems like HashiCorp Vault centrally store sensitive credentials (API keys, passwords, certificates) with encryption at rest, fine-grained access policies, and comprehensive audit logging. They eliminate the practice of storing secrets in plaintext configuration files or source code.",
+      nornir_runner: "Nornir is a Python network automation framework that uses a pluggable inventory system and a task/result execution model. Unlike YAML-based tools, Nornir gives developers full Python flexibility for complex automation logic, with built-in threading for parallel device communication.",
+      config_compliance_engine: 'Configuration compliance engines compare the actual running configuration of network devices against approved "golden" configurations. They detect configuration drift\u2014unauthorized or accidental changes\u2014and generate reports identifying policy violations that could cause security or operational issues.',
+      chatops_bot: "ChatOps integrates automation tools with messaging platforms (Slack, Microsoft Teams) so that teams can execute operational tasks, receive alerts, and collaborate on incidents through conversational interfaces. It creates a shared, auditable record of operational actions.",
+      test_lab: "A network test lab provides an isolated environment for validating configuration changes, firmware upgrades, and automation scripts before production deployment. Modern labs may use physical hardware, virtual network devices (GNS3, EVE-NG, CML), or containerized network operating systems.",
+      change_advisory_board_room: "A Change Advisory Board (CAB) is an ITIL governance practice where a cross-functional group reviews proposed changes to IT infrastructure. The CAB evaluates risk, scheduling, and rollback plans to balance the organization's need for change against operational stability.",
+      webhook_relay: "Webhooks are HTTP callbacks that deliver real-time event notifications between systems. When a source system detects a state change, it sends an HTTP POST to a registered URL. In network automation, webhooks trigger remediation workflows, notifications, or data synchronization without polling.",
+      regional_nautobot_cluster: "High-availability clustering deploys multiple application instances with database replication and health-checked failover. Active/standby configurations provide cold redundancy, while active/active setups distribute load across all nodes, eliminating single points of failure.",
+      ztp_server: "Zero-Touch Provisioning (ZTP) allows network devices to automatically configure themselves on first boot. The device obtains an IP address via DHCP, downloads its configuration and firmware from a server (TFTP/HTTP), and joins the network without manual intervention.",
+      automated_compliance_engine: "Continuous compliance monitoring automatically validates device configurations against security policies, industry standards (PCI-DSS, SOC 2, HIPAA), and organizational baselines on a recurring schedule, detecting and reporting deviations in near-real-time.",
+      network_digital_twin: 'A network digital twin is a virtual replica of a physical network that simulates topology, routing, and device behavior. Engineers use it to model "what-if" scenarios, validate changes, and predict failures before touching production infrastructure.',
+      multi_site_orchestrator: "Multi-site network orchestration coordinates configuration, policy, and automation across geographically distributed locations through a centralized platform. It ensures consistent operations and policy enforcement regardless of which physical site a device resides in.",
+      cloud_gateway: "A cloud gateway connects on-premises networks to public cloud providers (AWS, Azure, GCP) via IPsec VPN tunnels or dedicated interconnects (AWS Direct Connect, Azure ExpressRoute). It bridges the gap between traditional network infrastructure and cloud-native services.",
+      self_healing_network_fabric: "Self-healing networks use closed-loop automation: telemetry detects faults, correlation engines identify root causes, and orchestration platforms execute pre-approved remediation actions (traffic rerouting, service restarts) automatically, reducing mean time to recovery.",
+      nautobot_ecosystem_hub: "Platform ecosystems allow third-party developers to extend core functionality through plugins and apps. Nautobot's app framework supports custom data models, views, REST/GraphQL API endpoints, and scheduled Jobs, enabling organizations to tailor the platform to their specific needs.",
+      the_war_room: "Incident command is a structured approach to managing major outages, adapted from emergency services. It assigns clear roles (Incident Commander, Communications Lead, Subject Matter Experts), uses dedicated communication channels, and follows escalation procedures to minimize mean time to recovery."
+    },
+    workers: {
+      noc_technician: "A Network Operations Center (NOC) is a centralized facility where technicians monitor network health 24/7 using dashboards and alerting systems. NOC staff triage incidents by severity, perform initial diagnostics, and escalate to engineering teams when automated remediation is insufficient.",
+      cable_monkey: "Structured cabling professionals install and maintain the physical network layer\u2014copper (Cat5e/Cat6/Cat6a) and fiber optic cabling, patch panels, and cable management\u2014following TIA/EIA standards. Proper physical infrastructure is the foundation that all higher-layer network services depend on.",
+      network_engineer: "Network engineers design, implement, and maintain data communication networks. They work with routing protocols (BGP, OSPF, IS-IS), switching technologies (VLANs, STP, EVPN/VXLAN), and security policies (ACLs, firewalls) to ensure reliable, secure connectivity.",
+      systems_administrator: "Systems administrators manage server infrastructure including operating systems, virtualization platforms (VMware, KVM), storage, and core services (DNS, DHCP, NTP, Active Directory). In modern environments they increasingly use configuration management tools and containers.",
+      python_developer: "Python has become the dominant language for network automation due to libraries like Netmiko (SSH device interaction), NAPALM (vendor-agnostic device abstraction), and rich data manipulation capabilities. Python's readable syntax lowers the barrier for network engineers learning to code.",
+      devops_engineer: "DevOps engineers bridge development and operations by implementing CI/CD pipelines, infrastructure as code, containerization, and monitoring. The DevOps philosophy emphasizes automation, collaboration, and rapid feedback loops to deliver reliable infrastructure changes.",
+      automation_engineer: "Network automation engineers develop scripts, workflows, and integrations that replace manual CLI-based operations with programmatic approaches. They reduce human error, improve consistency, and enable networks to scale beyond what manual processes can support.",
+      security_engineer: "Network security engineers design and implement defense-in-depth strategies including next-generation firewalls, intrusion detection/prevention systems (IDS/IPS), network segmentation, encryption, and access control to protect infrastructure from threats and meet regulatory compliance requirements.",
+      automation_architect: "Automation architects define the overall strategy, standards, and toolchain for network automation within an organization. They establish code review processes, testing standards, and integration patterns that ensure automation solutions are scalable, maintainable, and secure.",
+      site_reliability_engineer: "Site Reliability Engineering (SRE), pioneered at Google, applies software engineering principles to IT operations. SREs define Service Level Indicators (SLIs) and Objectives (SLOs), manage error budgets, and build automation to maintain reliability while enabling development velocity.",
+      cloud_engineer: "Cloud engineers design and manage infrastructure on public cloud platforms using services like virtual private clouds (VPCs), load balancers, and managed databases. They use Infrastructure as Code tools (Terraform, CloudFormation) to provision and manage cloud resources declaratively.",
+      data_scientist: "In AIOps, data scientists apply machine learning and statistical analysis to network telemetry data. They build models for anomaly detection, capacity forecasting, root cause analysis, and predictive maintenance, transforming raw metrics into actionable operational intelligence."
+    },
+    technologies: {
+      ssh: "SSH (Secure Shell, RFC 4253) is a cryptographic network protocol that provides encrypted remote login and command execution. It replaced Telnet, which transmitted all data including passwords in cleartext. SSH uses public-key cryptography for authentication and symmetric encryption for session data.",
+      snmp_monitoring: "SNMP (Simple Network Management Protocol) allows management systems to query devices for operational data (interface counters, CPU utilization, memory) using a hierarchical OID namespace called the MIB. SNMPv3 added authentication and encryption to address earlier versions' security weaknesses.",
+      vlans: "VLANs (Virtual LANs, IEEE 802.1Q) logically segment a physical switch into multiple broadcast domains. Traffic between VLANs requires Layer 3 routing. VLAN tagging inserts a 4-byte header into Ethernet frames, allowing a single trunk link to carry traffic for multiple VLANs.",
+      subnetting: "Subnetting divides IP address spaces into smaller networks using CIDR (Classless Inter-Domain Routing) notation. A /24 prefix provides 254 usable host addresses, while a /30 provides 2, commonly used for point-to-point links. Efficient subnetting conserves IP address space and limits broadcast domains.",
+      spanning_tree: "Spanning Tree Protocol (IEEE 802.1D) prevents Layer 2 loops in networks with redundant paths by electing a root bridge and placing ports into forwarding or blocking states. RSTP (802.1w) improved convergence from 30\u201350 seconds to sub-second failover.",
+      ospf: "OSPF (Open Shortest Path First, RFC 2328) is a link-state interior gateway protocol that builds a complete topology map of the network using Dijkstra's shortest-path algorithm. It supports hierarchical design through areas, with Area 0 serving as the backbone.",
+      bgp_basics: "BGP (Border Gateway Protocol, RFC 4271) is the routing protocol that connects autonomous systems on the internet. It uses path-vector routing with policy-based route selection, enabling organizations to control how traffic enters and exits their networks through attributes like AS-PATH, LOCAL_PREF, and MED.",
+      python_basics: "Python is a high-level, interpreted programming language valued in network automation for its readable syntax, extensive standard library, and rich ecosystem of networking libraries (Netmiko, NAPALM, Scrapli, pyATS). It runs on all major platforms and integrates easily with REST APIs.",
+      version_control: "Version control systems (Git, Mercurial) track every change to a set of files over time, enabling teams to collaborate, review changes, revert mistakes, and maintain a complete audit trail. Git's distributed model means every clone contains the full repository history.",
+      rest_apis: "REST (Representational State Transfer) APIs use standard HTTP methods (GET, POST, PUT, DELETE) to interact with resources identified by URLs. They return structured data (JSON/XML) and are the primary programmatic interface for modern network platforms, including Nautobot, Meraki, and DNA Center.",
+      configuration_templating: "Configuration templating engines like Jinja2 separate static configuration patterns from variable data. A single template combined with per-device variables can generate consistent configurations for thousands of devices, eliminating copy-paste errors and enforcing organizational standards.",
+      key_based_auth: "SSH key-based authentication uses asymmetric cryptography: a private key (kept secret on the client) and a matching public key (installed on the server). It is more secure than password authentication because the private key never traverses the network and can require a passphrase for additional protection.",
+      regular_expressions: "Regular expressions (regex) are pattern-matching syntax for searching and extracting data from text. In network automation, regex parses unstructured CLI output (show commands) into structured data\u2014though modern approaches prefer structured output formats like JSON, XML, or TextFSM templates.",
+      yaml: "YAML (YAML Ain't Markup Language) is a human-readable data serialization format used extensively in network automation for Ansible playbooks, inventory files, and CI/CD pipeline definitions. Its indentation-based structure avoids brackets but requires strict whitespace consistency.",
+      remote_work: "Remote network administration relies on VPN tunnels, SSH jump hosts, and out-of-band management (console servers, iLO/iDRAC) to provide secure access to infrastructure from any location. Zero-trust network access (ZTNA) is increasingly replacing traditional VPN architectures.",
+      source_of_truth: "A network source of truth (NSoT) is the single authoritative data store that defines the intended state of the network\u2014device inventory, IP addressing, circuit records, and topology. Automation workflows consume this data to generate configurations and validate compliance.",
+      configuration_management: "Configuration management tools (Ansible, Puppet, Chef, Salt) declare the desired state of infrastructure and enforce it across systems. In networking, they push device configurations, validate compliance, and ensure consistency at scale through idempotent operations.",
+      ip_address_management: "IPAM systems manage the allocation and tracking of IP address space, integrating with DNS and DHCP to provide a unified view of addressing. They enforce allocation policies, prevent duplicate assignments, and support both IPv4 and IPv6 address planning.",
+      containers: "Containers package applications with their dependencies into lightweight, portable units that share the host OS kernel. Docker popularized containerization, while Kubernetes orchestrates container deployment at scale. Network automation platforms like Nautobot commonly run as containerized services.",
+      continuous_integration: "Continuous Integration (CI) automatically builds and tests code changes each time they are pushed to a repository. CI pipelines for network automation typically run linters (yamllint, pylint), unit tests, and integration tests against virtual lab environments before changes reach production.",
+      nornir: "Nornir is a pure-Python automation framework that provides an inventory system, task execution engine, and result handling without requiring YAML. It supports threaded parallel execution across devices and integrates with libraries like Netmiko, NAPALM, and Scrapli for device communication.",
+      secrets_management: "Secrets management centralizes the storage and access control of sensitive credentials using encryption, role-based access policies, and audit logging. Solutions like HashiCorp Vault, AWS Secrets Manager, and CyberArk replace plaintext credentials in code and configuration files.",
+      graphql: "GraphQL is a query language for APIs that lets clients request exactly the fields they need in a single request. Unlike REST, which returns fixed data structures per endpoint, GraphQL's flexible queries reduce over-fetching and minimize the number of API calls needed.",
+      nautobot_jobs: "Nautobot Jobs are Python classes that run within the Nautobot platform, providing a framework for scheduled or on-demand automation tasks with built-in logging, approval workflows, and a web UI. They leverage Nautobot's data models and APIs for source-of-truth-driven automation.",
+      config_compliance: "Configuration compliance validates that network devices match their intended configuration by comparing running configs against approved golden templates. Deviations (drift) may indicate unauthorized changes, failed deployments, or security policy violations requiring remediation.",
+      chatops: "ChatOps brings operational tools into team messaging platforms, allowing engineers to execute commands, trigger deployments, and manage incidents through chat messages. It creates a transparent, shared operational record and lowers the barrier to executing routine automation.",
+      network_testing: "Network testing frameworks (pyATS/Genie, Batfish, pytest with Nornir) validate network state and behavior programmatically. Tests can verify routing table entries, interface status, ACL rules, and end-to-end connectivity before and after changes are applied.",
+      event_driven_automation: "Event-driven automation triggers workflows automatically in response to network events (link down, threshold breach, configuration change). Systems like StackStorm, Nautobot webhooks, or Ansible Event-Driven respond in seconds without human intervention.",
+      gitops: "GitOps uses Git repositories as the single source of truth for infrastructure definitions. Changes are made through pull requests, reviewed by peers, and applied automatically by CI/CD pipelines. The Git history provides a complete, auditable record of every infrastructure change.",
+      certificate_management: "TLS/SSL certificates authenticate server identity and enable encrypted communications. Certificate lifecycle management\u2014issuance, renewal, and revocation\u2014is critical; expired certificates cause outages. Tools like Let's Encrypt and cert-manager automate this process.",
+      infrastructure_as_code: "Infrastructure as Code (IaC) manages computing infrastructure through machine-readable definition files rather than manual processes. Tools like Terraform, Pulumi, and CloudFormation provision and manage resources declaratively, enabling version control, peer review, and repeatable deployments.",
+      nautobot_app_development: "Nautobot Apps (plugins) extend the platform using Django's ORM and REST framework. Developers can add custom data models, views, API endpoints, GraphQL types, and Jobs. The app framework supports the full Django development lifecycle including migrations, testing, and packaging.",
+      high_availability: "High availability (HA) architectures eliminate single points of failure through redundancy. Active/standby configurations maintain a hot spare, while active/active setups distribute load. Database replication, health checks, and automatic failover ensure service continuity during component failures.",
+      zero_touch_provisioning: "ZTP automates the initial configuration of network devices using DHCP options to direct a booting device to a provisioning server. The device downloads its firmware, base configuration, and any required scripts, joining the network fully configured without manual CLI access.",
+      continuous_compliance: "Continuous compliance automates the ongoing validation of infrastructure against regulatory and organizational policies. Rather than periodic manual audits, automated tools continuously scan configurations, detect violations, and can trigger remediation workflows in real time.",
+      digital_twin: "A network digital twin creates a virtual model of the physical network using configuration data, topology information, and traffic models. Engineers simulate changes, predict failures, and validate designs in the digital twin before applying them to production infrastructure.",
+      multi_site_automation: "Multi-site automation extends operational workflows across geographically distributed locations, handling challenges like time zone coordination, site-specific configurations, and network partitioning. Centralized orchestration ensures consistent policy while accommodating local requirements.",
+      evpn_vxlan: "EVPN/VXLAN (Ethernet VPN with Virtual Extensible LAN) is a modern data center fabric technology. VXLAN encapsulates Layer 2 frames in UDP for transport across Layer 3 networks, while EVPN provides a control plane for MAC/IP learning, multi-tenancy, and efficient BUM traffic handling.",
+      hybrid_cloud: "Hybrid cloud architectures span on-premises data centers and public cloud services, connected via VPN or dedicated interconnects. This model lets organizations place workloads where they perform best while maintaining consistent networking, security policies, and operational practices across environments.",
+      intent_based_networking: `Intent-based networking (IBN) translates high-level business policies ("department X cannot reach database Y") into network configurations automatically. The system continuously verifies that the network's actual state matches the declared intent, remediating drift autonomously.`,
+      app_ecosystem: "Software ecosystems around open-source platforms accelerate innovation through community contributions. Nautobot's ecosystem includes apps for network testing (Golden Config), circuit management, firewall policy, and device lifecycle\u2014each extending the core platform without modifying it.",
+      aiops: "AIOps (Artificial Intelligence for IT Operations) applies machine learning to operational data for automated anomaly detection, event correlation, root cause analysis, and predictive alerting. It processes volumes of telemetry data that exceed human analysis capacity.",
+      zero_trust_architecture: "Zero Trust is a security model that requires strict identity verification for every person and device accessing resources, regardless of network location. It eliminates implicit trust based on network perimeter, enforcing least-privilege access through continuous authentication and micro-segmentation.",
+      network_as_code: "Network as Code extends Infrastructure as Code specifically to network infrastructure\u2014every VLAN, route, ACL, and policy is defined in version-controlled files. Changes flow through CI/CD pipelines with automated testing, peer review, and audit trails, treating network configuration like software."
+    },
+    upgrades: {
+      better_tab_completion: "Tab completion in network device CLIs (Cisco IOS, Junos, EOS) auto-completes commands and parameters, reducing typing errors and enabling faster navigation of complex command hierarchies.",
+      aliases_and_shortcuts: "Shell aliases and CLI shortcuts map frequently used multi-word commands to short mnemonics. In Cisco IOS, the 'alias' command creates shortcuts; in Bash/Zsh, aliases accelerate repetitive terminal workflows.",
+      syntax_highlighting: "Syntax highlighting uses color to distinguish language constructs\u2014keywords, strings, variables, comments\u2014making code structure visible at a glance. It is especially valuable in YAML, where indentation errors are syntactically significant but visually subtle.",
+      linters: "Linters (pylint, yamllint, ansible-lint) perform static analysis on source code, checking for syntax errors, style violations, and common programming mistakes without executing the code. They enforce consistent quality standards across a team.",
+      auto_formatter: "Code formatters like Black (Python), Prettier (JS), and yamlfmt automatically enforce a deterministic code style. By eliminating style as a code review concern, they let reviewers focus on logic and correctness.",
+      pre_commit_hooks: "Pre-commit hooks are scripts triggered by Git before a commit is finalized. They run automated checks\u2014linting, formatting, secrets detection (detect-secrets)\u2014catching issues at the developer's workstation before code enters the shared repository.",
+      parallel_execution: "Parallel execution in automation frameworks (Ansible forks, Nornir threading) runs tasks against multiple devices simultaneously. This reduces deployment time from hours to minutes for large-scale configuration changes across hundreds of devices.",
+      caching_layer: "Application caches (Redis, Memcached) store frequently accessed data in memory, dramatically reducing database query load and API response latency. Cache invalidation strategies ensure data freshness while maintaining performance benefits.",
+      dedicated_lab_environment: "Dedicated lab environments use virtual routers/switches (Cisco CML, GNS3, EVE-NG, Containerlab) or physical hardware to create isolated replicas of production networks for safe testing and validation of changes.",
+      database_optimization: "Database optimization techniques include creating indexes on frequently queried columns, analyzing query execution plans (EXPLAIN ANALYZE in PostgreSQL), normalizing schema design, and implementing connection pooling to improve application performance.",
+      redis_cache: "Redis is an open-source, in-memory data structure store supporting strings, hashes, lists, sets, and sorted sets. It serves as a high-performance cache, message broker, and task queue backend (Celery) for applications like Nautobot.",
+      load_balancer: "Load balancers distribute traffic across multiple backend servers using algorithms like round-robin, least-connections, or weighted distribution. They perform health checks to remove unhealthy servers from the pool, improving availability and scalability.",
+      backup_system: "Backup systems create recoverable copies of data and configurations using strategies like full, incremental, or differential backups. The 3-2-1 rule recommends three copies on two different media types, with one stored offsite. Regular restore testing validates backup integrity.",
+      log_aggregation: "Log aggregation platforms (Elastic/ELK Stack, Splunk, Grafana Loki) collect logs from distributed systems into a centralized, searchable index. They enable correlation of events across infrastructure components for troubleshooting and security analysis.",
+      custom_nautobot_plugin: "Nautobot Apps are Django-based Python packages that extend the platform with custom models, views, APIs, and Jobs. The app framework provides database migrations, REST/GraphQL auto-generation, and integration with Nautobot's permission and UI systems.",
+      api_rate_limit_increase: "API rate limiting controls request frequency to protect servers from overload using algorithms like token bucket or sliding window. Limits are expressed as requests per time period (e.g., 1000 req/min) and communicated via HTTP headers (X-RateLimit-Remaining).",
+      automated_rollback: "Automated rollback detects failed deployments through health checks or compliance validation and reverts to the last known-good configuration. Techniques include configuration checkpoints (Junos rollback), canary deployments, and version-controlled config restoration.",
+      network_telemetry_streaming: "Streaming telemetry (gNMI/gRPC, NETCONF notifications) pushes device metrics to collectors at sub-second intervals, replacing traditional SNMP polling. It provides higher-resolution data with lower device CPU overhead and enables real-time monitoring and analytics.",
+      sla_renegotiations: 'Service Level Agreements define measurable availability targets. Each additional "nine" exponentially reduces allowed downtime: 99.9% allows 8.76 hours/year of downtime, 99.99% allows 52.6 minutes, and 99.999% allows only 5.26 minutes.',
+      virtual_environments: "Python virtual environments (venv, virtualenv, Poetry) create isolated dependency trees for each project. They prevent package version conflicts between different automation tools and ensure reproducible environments across development, testing, and production systems."
+    },
+    trades: {
+      cisco_tac: "Cisco's Technical Assistance Center (TAC) provides tiered technical support for Cisco products globally. SmartNet service contracts include hardware replacement (RMA), software updates, and access to TAC engineers organized by technology specialty (routing, security, collaboration).",
+      arista_support: "Arista Networks builds high-performance data center switches running EOS (Extensible Operating System). EOS is built on an unmodified Linux kernel with a multi-process, fault-isolated architecture, and provides native eAPI (JSON-RPC) and OpenConfig/gNMI interfaces for automation.",
+      juniper_jtac: "Juniper's JTAC supports devices running Junos OS, which uses a candidate/commit configuration model\u2014changes are staged and applied atomically. Junos provides built-in automation through NETCONF, PyEZ (Python library), and SLAX/XSLT scripting.",
+      open_source_community: "The Network to Code (NTC) community maintains open-source tools including Nautobot, along with libraries like ntc-templates (TextFSM), Netutils, and Schema Enforcer. Open-source collaboration enables shared development of network automation standards and tools across organizations.",
+      aws_sales_rep: "Amazon Web Services (AWS) provides cloud networking services including VPC (Virtual Private Cloud), Direct Connect for dedicated connectivity, Transit Gateway for multi-VPC routing, and Route 53 for DNS. AWS networking operates on a shared-responsibility model with the customer.",
+      the_var: "Value Added Resellers (VARs) are authorized intermediaries between hardware/software vendors and customers. They provide procurement, pre-sales engineering, implementation services, and ongoing support, often holding specialized certifications from vendors like Cisco, Palo Alto, and Arista.",
+      palo_alto_networks: "Palo Alto Networks produces next-generation firewalls that inspect traffic at the application layer using App-ID technology. Their platform includes Panorama for centralized management, Prisma for cloud security, and Cortex for security operations, providing defense-in-depth across network boundaries."
+    }
+  };
+
   // js/engine/dataLoader.js
   function buildMap(arr) {
     const map = /* @__PURE__ */ new Map();
@@ -5264,7 +5394,8 @@
     achievements: buildMap(achievements_default),
     prestige: Object.freeze(prestige_default),
     seasons: seasons_default.map((item) => Object.freeze(item)),
-    crafting: buildMap(crafting_default)
+    crafting: buildMap(crafting_default),
+    educational: Object.freeze(educational_default)
   };
   validate(data);
 
@@ -7383,6 +7514,54 @@
       highlightAndScroll(target);
     });
   }
+  var eduBannerEl = null;
+  function dismissEduBanner() {
+    if (!eduBannerEl) return;
+    eduBannerEl.classList.add("edu-banner--dismissing");
+    eduBannerEl.addEventListener("animationend", () => {
+      eduBannerEl.remove();
+      eduBannerEl = null;
+    }, { once: true });
+    setTimeout(() => {
+      if (eduBannerEl) {
+        eduBannerEl.remove();
+        eduBannerEl = null;
+      }
+    }, 400);
+  }
+  function showEduBanner(title, text) {
+    if (eduBannerEl) {
+      eduBannerEl.remove();
+      eduBannerEl = null;
+    }
+    const banner = el("div", "edu-banner");
+    const header = el("div", "edu-banner-header");
+    const badge = el("span", "edu-type-badge");
+    badge.textContent = "LEARN";
+    const titleEl = el("span", "edu-banner-title");
+    titleEl.textContent = title;
+    const closeBtn = el("button", "edu-banner-close");
+    closeBtn.textContent = "\xD7";
+    closeBtn.setAttribute("aria-label", "Close");
+    closeBtn.addEventListener("click", dismissEduBanner);
+    header.append(badge, titleEl, closeBtn);
+    const desc = el("div", "edu-banner-desc");
+    desc.textContent = text;
+    banner.append(header, desc);
+    document.body.appendChild(banner);
+    eduBannerEl = banner;
+  }
+  function makeInfoBtn(title, text) {
+    const btn = el("button", "edu-info-btn");
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="4.5" r="1" fill="currentColor"/><rect x="7" y="6.5" width="2" height="5" rx="0.5" fill="currentColor"/></svg>';
+    btn.title = "Learn about " + title;
+    btn.setAttribute("aria-label", "Educational info about " + title);
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showEduBanner(title, text);
+    });
+    return btn;
+  }
 
   // js/ui/formatUtils.js
   var SEASON_NAMES = ["Q1", "Q2", "Q3", "Q4"];
@@ -8125,7 +8304,12 @@
       e.stopPropagation();
       togglePin(id);
     });
-    cardHeader.append(nameSpan, countBadge, pinBtn);
+    const eduNote = data.educational.buildings?.[id];
+    if (eduNote) {
+      cardHeader.append(nameSpan, countBadge, pinBtn, makeInfoBtn(def.name, eduNote));
+    } else {
+      cardHeader.append(nameSpan, countBadge, pinBtn);
+    }
     const descEl = el("div", "bld-desc");
     descEl.textContent = def.description || "";
     const effectsEl = el("div", "bld-effects");
@@ -8483,7 +8667,12 @@
       const roleName = el("span", "role-name");
       roleName.textContent = def.name;
       const roleCount = el("span", "role-count");
-      header.append(roleName, roleCount);
+      const eduNote = data.educational.workers?.[roleId];
+      if (eduNote) {
+        header.append(roleName, roleCount, makeInfoBtn(def.name, eduNote));
+      } else {
+        header.append(roleName, roleCount);
+      }
       const roleDesc = el("p", "role-desc");
       roleDesc.textContent = def.description || "";
       const footer = el("div", "worker-role-footer");
@@ -8741,6 +8930,8 @@
         const nameSpan = el("span", "tech-name");
         nameSpan.textContent = def.name;
         cardHeader.appendChild(nameSpan);
+        const eduNote = data.educational.technologies?.[id];
+        if (eduNote) cardHeader.appendChild(makeInfoBtn(def.name, eduNote));
         const descEl = el("div", "tech-desc");
         descEl.textContent = def.description;
         const costsEl = el("div", "tech-costs");
@@ -8816,6 +9007,8 @@
         const nameSpan = el("span", "tech-name");
         nameSpan.textContent = def.name;
         cardHeader.append(check, nameSpan);
+        const eduNote = data.educational.technologies?.[id];
+        if (eduNote) cardHeader.appendChild(makeInfoBtn(def.name, eduNote));
         const flavorEl = el("div", "tech-desc");
         flavorEl.textContent = def.flavorOnResearch || "";
         card.append(cardHeader, flavorEl);
@@ -9019,6 +9212,8 @@
         const nameSpan = el("span", "upgrade-name");
         nameSpan.textContent = def.name;
         cardHeader.appendChild(nameSpan);
+        const eduNote = data.educational.upgrades?.[id];
+        if (eduNote) cardHeader.appendChild(makeInfoBtn(def.name, eduNote));
         const descEl = el("div", "upgrade-desc");
         descEl.textContent = def.description;
         const costsEl = el("div", "upgrade-costs");
@@ -9075,6 +9270,8 @@
         const nameSpan = el("span", "upgrade-name");
         nameSpan.textContent = def.name;
         cardHeader.append(check, nameSpan);
+        const eduNote = data.educational.upgrades?.[id];
+        if (eduNote) cardHeader.appendChild(makeInfoBtn(def.name, eduNote));
         const effectsEl = el("div", "upgrade-effects");
         for (let i = 0; i < def.effects.length; i++) {
           const e = def.effects[i];
@@ -9475,9 +9672,12 @@
     const headerRow = el("div", "trade-partner-header");
     const nameEl = el("span", "trade-partner-name");
     nameEl.textContent = partner.name;
+    headerRow.appendChild(nameEl);
     const personalityEl = el("span", "trade-partner-personality");
     personalityEl.textContent = partner.personality;
-    headerRow.append(nameEl, personalityEl);
+    headerRow.append(personalityEl);
+    const eduNote = data.educational.trades?.[partnerId];
+    if (eduNote) headerRow.appendChild(makeInfoBtn(partner.name, eduNote));
     const attitudeRow = el("div", "trade-attitude-row");
     const attLabel = el("span", "trade-attitude-label");
     attLabel.textContent = "Reputation";
